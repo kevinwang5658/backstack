@@ -10,8 +10,7 @@ They were all clunky, required their own containers for pages or were prone to o
 my hands at making one. This is my first library so let me know if there can be any improvements.
 
 ## What It Does
-The first thing I should tell you is what this library does. When used properly, this library provides back navigation to your app. 
-On rotation it will recreate the correct viewgroups. This library will only work with view based navigation. It will not work with fragments or activities. The type of back navigation this library provides is slightly different from the one recommended
+When used properly, this library provides back navigation to your app. On rotation it will recreate the correct viewgroups, in the correct order. This library will only work with view based navigation. It will not work with fragments or activities. The type of back navigation this library provides is slightly different from the one recommended
 officially by google. For linear navigation (screen 1 -> screen 2 -> screen 3), it will remove the previous view and add the
 new view (recommended behaviour). However for cluster selection types (like View Pagers or Bottom Bars) where there are multiple screens, it will maintain separate backstacks for each tab and will not switch between tabs, treating each tab as a linear backstack.
 
