@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.kevinwang5658'
 
 android {
     compileSdkVersion 25
@@ -20,12 +22,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    //yo fuck Jack
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
 }
 
 dependencies {
@@ -40,4 +36,5 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.3.1'
 
     testCompile "org.robolectric:robolectric:3.3.2"
+
 }
