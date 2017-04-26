@@ -21,7 +21,7 @@ In the main Activity:
 ~~~~Java
 J    @Override
     protected void onCreate(Bundle savedInstanceState) {        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+l        setContentView(R.layout.activity_main);
         
         BackStackManager.install(this);
     }
@@ -44,7 +44,7 @@ Inside the root viewgroup:
         }));
 ~~~~
 
-This will create a backstack with the container as the root and the view created in the lambda as the first screen. All screens added to this backstack will be swapped (removeView() will be called on the previous view and addView() will be called on the new view) inside the container. The third parameter, the creator, is stored so that the view can be recreated on rotation. Be careful not to capture any variables in the enclosing class, this will memory leak. Java 8 lambda's will not hold a reference to the enclosing class if nothing is captured. An anonymous inner function will not work here and will leak. A static class can so be used if there are parameters for the viewgroup that are needed for recreation. 
+This will create a backstack with the container as the root and the view created in the lambda as the first screen. All screens added to this backstack will be swapped (removeView() will be called on the previous view and addView() will be called on the new view) inside the container. The third parameter, the creator, is stored so that the view can be recreated on rotation. Be careful not to capture any variables in the enclosing class, this will memory leak. Java 8 lambda's will not hold a reference to the enclosing class if nothing is captured. An anonymous inner function will not work here and will leak. A static class can also be used if there are parameters for the viewgroup that are needed for recreation. 
 
 ~~~~Java
     public void createLinearBackStack(int id){
