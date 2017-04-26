@@ -144,10 +144,12 @@ public class LinearBackStack implements Reversible{
             ViewGroup newlyCreatedViewGroup;
 
             //add previous views
-            if (!nodeToBeAdded.isIndependent) {
+            if (!nodeToBeAdded.isIndependent && !nodeToBeRemoved.isIndependent) {
                 newlyCreatedViewGroup = createView(getRootViewGroup(), nodeToBeAdded.viewCreator);
-            } else {
+            } else if (nodeToBeAdded.isIndependent){
                 newlyCreatedViewGroup = independentViewGroups.get(independentViewGroups.size() - 1).get();
+            } else {
+                newlyCreatedViewGroup = topViewGroup.get();
             }
 
             //remove currentNode
