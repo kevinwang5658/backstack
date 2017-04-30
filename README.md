@@ -1,8 +1,7 @@
-
 # BackStack
 
 A lightweight Android BackStack library for view groups.
-Hey look I called it by what it actually does! Unlike all those other libraries out there.
+And hey look! I called it by what it actually does, unlike all those other libraries out there.
 
 ## Background
 
