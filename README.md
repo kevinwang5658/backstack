@@ -7,7 +7,8 @@ Hey look I called it by what it actually does! Unlike all those other libraries 
 
 A little background on this library, I wasn't really satisfied with the other android backstack libraries available.
 They were all clunky, required their own containers for pages or were prone to odd memory leaks. So I decided to try
-my hands at making one. This is my first library so let me know if there can be any improvements.
+my hands at making one. This is my first library so let me know if there can be any improvements. Backstack libraries don't
+have to be this complicated!
 
 ## What It Does
 When used properly, this library provides back navigation to your app. On rotation it will recreate the correct viewgroups, in the correct order. This library will only work with view based navigation. It will not work with fragments or activities. The type of back navigation this library provides is slightly different from the one recommended
@@ -19,11 +20,14 @@ Usage is very simple
 
 In the main Activity:
 ~~~~Java
-J    @Override
-    protected void onCreate(Bundle savedInstanceState) {        super.onCreate(savedInstanceState);
-l        setContentView(R.layout.activity_main);
-        
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         BackStackManager.install(this);
+
+
     }
 
 
@@ -53,7 +57,7 @@ This will create a backstack with the container as the root and the view created
 
     public static class ViewGroupCreator implements LinearBackStack.ViewCreator{
 
-        final int id;
+        final int id
 
         ViewGroupCreator(int id){
             this.id = id;
