@@ -142,7 +142,24 @@ With Andriod View Animations:
 
 This two types of backstacks can be chained together. This might be useful when you have a viewpager on the third screen and you want multiple screens inside the view pager. To do this you must implement ClusterBackStackImpl inside the ViewGroup that contains the cluster backstack and return the created ClusterBackStack. Remenber all the ClusterBackStack does is delegate back events. So inside the ViewPager, create LinearBackStacks like you did before for a normal ClusterBackStack. Remenber to use switchContext(int) when the shown page is changed. And that's all. BackStack will now delegate the back events to the selected page of the ViewPager.  
 
+## License
 
+~~~~
+Copyright 2017 Kevin Wang
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+~~~~
 
 
 
