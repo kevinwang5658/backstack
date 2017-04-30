@@ -5,5 +5,9 @@ package com.rievo.android.library;
  */
 
 public interface ClusterBackStackImpl {
+    /**
+     * Please return the cluster backstack created in the viewgroup.
+     * @return
+     */
     ClusterBackStack getClusterBackStack();
 }

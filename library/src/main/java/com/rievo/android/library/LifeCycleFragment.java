@@ -22,7 +22,7 @@ public class LifeCycleFragment extends Fragment implements Application.ActivityL
         setRetainInstance(true);
     }
 
-    public static LifeCycleFragment create(Activity activity){
+    static LifeCycleFragment create(Activity activity){
         FragmentManager fm = activity.getFragmentManager();
         LifeCycleFragment fragment = (LifeCycleFragment) fm.findFragmentByTag(TAG);
 
@@ -39,7 +39,7 @@ public class LifeCycleFragment extends Fragment implements Application.ActivityL
         return fragment;
     }
 
-    public Activity retrieveActivity(){
+    Activity retrieveActivity(){
         return activity;
     }
 
@@ -52,25 +52,21 @@ public class LifeCycleFragment extends Fragment implements Application.ActivityL
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.d("fragment onCreate");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Timber.d("fragment onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Timber.d("fragment onPause");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Timber.d("fragment onDestroyView");
     }
 //     ___   _________________    ______________  __   __    ________________________  __________    ______
 //    /   | / ____/_  __/  _/ |  / /  _/_  __/\ \/ /  / /   /  _/ ____/ ____/ ____/\ \/ / ____/ /   / ____/
@@ -80,7 +76,6 @@ public class LifeCycleFragment extends Fragment implements Application.ActivityL
 
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
-        Timber.d("activity onCreate");
         if (this.activity == null) {
             this.activity = activity;
         }
@@ -88,33 +83,32 @@ public class LifeCycleFragment extends Fragment implements Application.ActivityL
 
     @Override
     public void onActivityStarted(Activity activity) {
-        Timber.d("activity onStarted");
+        if (this.activity == null) {
+            this.activity = activity;
+        }
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        Timber.d("activity onResumed");
+        if (this.activity == null) {
+            this.activity = activity;
+        }
     }
 
     @Override
-    public void onActivityPaused(Activity activity) {
-        Timber.d("activity onPaused");
-    }
+    public void onActivityPaused(Activity activity) {}
 
     @Override
     public void onActivityStopped(Activity activity) {
-        Timber.d("activity onStopped");
         this.activity = null;
     }
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
-        Timber.d("activity onSaveInstanceState");
     }
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        Timber.d("activity onDestroyed");
         this.activity = null;
     }
 }

@@ -20,6 +20,10 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String TAG = "Simple BackStack";
+
+    @BindView(R.id.root) RelativeLayout root;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         BackStackManager.install(this);
+        LinearBackStack.create(TAG, root, (inflater, container) -> {
+            return new ViewGroup1(inflater.getContext());
+        });
+        BackStackManager.setRootBackStack(LinearBackStack.get(TAG));
 
     }
 
