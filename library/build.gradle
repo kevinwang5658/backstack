@@ -1,5 +1,31 @@
 apply plugin: 'com.android.library'
 
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'kevinwang-backstack'
+
+    publishedGroupId = 'com.reivo.android'
+    libraryName = 'BackStack'
+    artifact = 'kevinwang-backstack'
+
+    libraryDescription = 'A lightweight Android BackStack'
+
+    siteUrl = 'https://github.com/kevinwang5658/BackStack'
+    gitUrl = 'https://github.com/kevinwang5658/BackStack.git'
+
+    libraryVersion = '0.1.0'
+
+    developerId = 'kevinwang5658'
+    developerName = 'Kevin Wang'
+    developerEmail = 'kevinwang5658@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+
+    
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
