@@ -49,7 +49,7 @@ public class LinearBackStack implements Reversible{
      * @return The created view
      */
     public static ViewGroup create(String TAG, ViewGroup container, ViewCreator creator){
-        return LinearBackStack.create(TAG, container, creator, (view, complete)->{complete.complete();}, (view, complete) -> {complete.complete();});
+        return LinearBackStack.create(TAG, container, creator, new DefaultAnimation(), new DefaultAnimation());
     }
 
     /**
@@ -163,15 +163,18 @@ public class LinearBackStack implements Reversible{
         if (!isIndependent) {
 
             final ViewGroup previousViewGroup = topViewGroup.get();
-            addAnimation.animate(viewGroup, ()->{
-                getRootViewGroup().removeView(previousViewGroup);
+            addAnimation.animate(viewGroup, new AnimationComplete() {
+                @Override
+                public void complete() {
+                    getRootViewGroup().removeView(previousViewGroup);
+                }
             });
 
             topViewGroup = new WeakReference<ViewGroup>(viewGroup);
         } else {
             //is independent
             independentViewGroups.add(new WeakReference<ViewGroup>(viewGroup));
-            addAnimation.animate(viewGroup, ()->{});
+            addAnimation.animate(viewGroup, new DefaultAnimationComplete());
         }
 
         int id = container.getId();
@@ -232,17 +235,23 @@ public class LinearBackStack implements Reversible{
                 viewToBeRemoved = getCurrentViewGroup();
                 viewToBeRemoved.bringToFront();
 
-                nodeToBeRemoved.removeAnimation.animate(viewToBeRemoved, ()->{
-                    getRootViewGroup().removeView(viewToBeRemoved);
+                nodeToBeRemoved.removeAnimation.animate(viewToBeRemoved, new AnimationComplete() {
+                    @Override
+                    public void complete() {
+                        getRootViewGroup().removeView(viewToBeRemoved);
+                    }
                 });
             } else {
                 viewToBeRemoved = independentViewGroups.get(independentViewGroups.size() - 1).get();
                 final ViewGroup container = (ViewGroup) viewToBeRemoved.getParent();
 
                 //animation
-                nodeToBeRemoved.removeAnimation.animate(viewToBeRemoved, ()-> {
-                    container.removeView(viewToBeRemoved);
-                    independentViewGroups.remove(independentViewGroups.size() - 1);
+                nodeToBeRemoved.removeAnimation.animate(viewToBeRemoved, new AnimationComplete() {
+                    @Override
+                    public void complete() {
+                        container.removeView(viewToBeRemoved);
+                        independentViewGroups.remove(independentViewGroups.size() - 1);
+                    }
                 });
             }
 
@@ -302,6 +311,26 @@ public class LinearBackStack implements Reversible{
      */
     public interface AnimationComplete{
         void complete();
+    }
+
+    //***************************
+    // No retrolambda for me :(
+    //***********************
+
+    public static class DefaultAnimation implements Animation{
+
+        @Override
+        public void animate(View view, LinearBackStack.AnimationComplete complete) {
+            complete.complete();
+        }
+    }
+
+    public static class DefaultAnimationComplete implements AnimationComplete{
+
+        @Override
+        public void complete() {
+
+        }
     }
 
 }

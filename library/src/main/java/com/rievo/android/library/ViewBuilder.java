@@ -15,8 +15,8 @@ public class ViewBuilder {
     LinearBackStack linearBackStack;
     ViewGroup container;
     LinearBackStack.ViewCreator viewCreator;
-    LinearBackStack.Animation addAnimation = (view, complete) -> {complete.complete();};
-    LinearBackStack.Animation removeAnimation = (view, complete) -> {complete.complete();};
+    LinearBackStack.Animation addAnimation = new LinearBackStack.DefaultAnimation();
+    LinearBackStack.Animation removeAnimation = new LinearBackStack.DefaultAnimation();
 
     boolean isIndependent = false;
 
@@ -61,5 +61,6 @@ public class ViewBuilder {
     public ViewGroup done(){
         return linearBackStack.addView(container, viewCreator, isIndependent, addAnimation, removeAnimation);
     }
+
 
 }
