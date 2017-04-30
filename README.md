@@ -1,3 +1,4 @@
+
 # BackStack
 
 A lightweight Android BackStack library for view groups.
@@ -17,6 +18,26 @@ new view (recommended behaviour). However for cluster selection types (like View
 
 ## How To Get It
 
+To install:
+
+In project build.gradle:
+~~~~
+allprojects {
+ repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+ }
+}
+~~~~
+
+and in your module build.gradle:
+~~~~
+dependencies {
+    compile 'com.github.kevinwang5658:backstack:v1.0-beta'
+}
+~~~~
+
+Note: do not add the jitpack.io repository under buildscript
 
 ## How To Use It
 Usage is very simple
