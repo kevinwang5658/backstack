@@ -8,7 +8,7 @@ And hey look! I called it by what it actually does, unlike all those other libra
 A little background on this library, I wasn't really satisfied with the other android backstack libraries available.
 They were all clunky, required their own containers for pages or were prone to odd memory leaks. So I decided to try
 my hands at making one. This is my first library so let me know if there can be any improvements. Backstack libraries don't
-have to be this complicated!
+have to be complicated!
 
 ## What It Does
 When used properly, this library provides back navigation to your app. On rotation it will recreate the correct viewgroups, in the correct order. This library will only work with view based navigation. It will not work with fragments or activities. The type of back navigation this library provides is slightly different from the one recommended
