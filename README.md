@@ -1,14 +1,14 @@
 # BackStack
 
 A lightweight Android BackStack library for view groups.
-Hey look I called it by what it actually does! Unlike all those other libraries out there.
+And hey look! I called it by what it actually does, unlike all those other libraries out there.
 
 ## Background
 
 A little background on this library, I wasn't really satisfied with the other android backstack libraries available.
 They were all clunky, required their own containers for pages or were prone to odd memory leaks. So I decided to try
 my hands at making one. This is my first library so let me know if there can be any improvements. Backstack libraries don't
-have to be this complicated!
+have to be complicated!
 
 ## What It Does
 When used properly, this library provides back navigation to your app. On rotation it will recreate the correct viewgroups, in the correct order. This library will only work with view based navigation. It will not work with fragments or activities. The type of back navigation this library provides is slightly different from the one recommended
@@ -17,6 +17,26 @@ new view (recommended behaviour). However for cluster selection types (like View
 
 ## How To Get It
 
+To install:
+
+In project build.gradle:
+~~~~
+allprojects {
+ repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+ }
+}
+~~~~
+
+and in your module build.gradle:
+~~~~
+dependencies {
+    compile 'com.github.kevinwang5658:backstack:v1.0-beta'
+}
+~~~~
+
+Note: do not add the jitpack.io repository under buildscript
 
 ## How To Use It
 Usage is very simple
