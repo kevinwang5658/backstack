@@ -7,6 +7,8 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import timber.log.Timber;
+
 /**
  * Created by kevin on 2017-04-25.
  */

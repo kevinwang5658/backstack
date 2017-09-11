@@ -19,15 +19,17 @@ public class ViewBuilder {
     LinearBackStack.Animation removeAnimation = new LinearBackStack.DefaultAnimation();
 
     boolean isIndependent = false;
+    boolean allowDuplicates = true;
 
     ViewBuilder (LinearBackStack linearBackStack){
         this.linearBackStack = linearBackStack;
     }
 
-    ViewBuilder addView(ViewGroup container, LinearBackStack.ViewCreator creator, boolean isIndependent){
+    ViewBuilder addView(ViewGroup container, LinearBackStack.ViewCreator creator, boolean isIndependent, boolean allowDuplicates){
         this.container = container;
         this.viewCreator = creator;
         this.isIndependent = isIndependent;
+        this.allowDuplicates = allowDuplicates;
 
         return this;
     }
@@ -59,7 +61,7 @@ public class ViewBuilder {
      * @return created viewgroup
      */
     public ViewGroup done(){
-        return linearBackStack.addView(container, viewCreator, isIndependent, addAnimation, removeAnimation);
+        return linearBackStack.addView(container, viewCreator, isIndependent, allowDuplicates, addAnimation, removeAnimation);
     }
 
 

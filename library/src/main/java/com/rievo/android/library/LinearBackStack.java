@@ -141,7 +141,11 @@ public class LinearBackStack implements Reversible{
      * @return A new view builder
      */
     public ViewBuilder addIndependentView(ViewGroup container, ViewCreator creator){
-        return new ViewBuilder(this).addView(container, creator, true);
+        return new ViewBuilder(this).addView(container, creator, true, false);
+    }
+
+    public ViewBuilder addIndependentView(ViewGroup container, ViewCreator creator, boolean allowDuplicate){
+        return new ViewBuilder(this).addView(container, creator, true, allowDuplicate);
     }
 
     /**
@@ -151,11 +155,14 @@ public class LinearBackStack implements Reversible{
      * @return A new view builder
      */
     public ViewBuilder replaceView(ViewCreator creator){
-        return new ViewBuilder(this).addView(getRootViewGroup(), creator, false);
+        return new ViewBuilder(this).addView(getRootViewGroup(), creator, false, true);
     }
 
-    ViewGroup addView(ViewGroup container, ViewCreator creator, boolean isIndependent, Animation addAnimation, Animation removeAnimation){
+    ViewGroup addView(ViewGroup container, ViewCreator creator, boolean isIndependent, boolean allowDuplicates, Animation addAnimation, Animation removeAnimation){
 
+        if(!allowDuplicates && viewBackStack.get(viewBackStack.size() - 1).viewCreator.equals(creator)){
+            return viewBackStack.get(viewBackStack.size() - 1).isIndependent ? independentViewGroups.get(independentViewGroups.size() - 1).get() : getCurrentViewGroup();
+        }
 
         ViewGroup viewGroup = createView(container, creator);
 
@@ -189,6 +196,7 @@ public class LinearBackStack implements Reversible{
 
     /*Same as addView but without adding it to the stack*/
     private ViewGroup createView(ViewGroup container, ViewCreator creator){
+        Timber.d(BackStackManager.getBackStackManager().getActivity() + "");
         ViewGroup viewGroup = creator.create(BackStackManager.getBackStackManager().getActivity().getLayoutInflater(), container);
         container.addView(viewGroup);
 
@@ -209,7 +217,6 @@ public class LinearBackStack implements Reversible{
      */
     @Override
     public boolean goBack(){
-
         //If current page is a cluster backstack then it can handle the back
         boolean isClusterBackSuccessful = false;
         if (getCurrentViewGroup() instanceof ClusterBackStackImpl) {
@@ -290,6 +297,10 @@ public class LinearBackStack implements Reversible{
      */
     public ViewGroup getCurrentViewGroup(){
         return topViewGroup.get();
+    }
+
+    public int getChildCount(){
+        return viewBackStack.size();
     }
 
     /**
