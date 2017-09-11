@@ -1,13 +1,11 @@
 package com.rievo.android.library;
 
-import android.rievo.com.library.R;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import timber.log.Timber;
 
@@ -17,8 +15,8 @@ import timber.log.Timber;
 
 /**
  * Main BackStack class. Default behaviour for this back stack is one container view with one screen.
- * When a new screen is added using {@link #replaceView(ViewCreator)}, the previous view will be replaced so that the container will still
- * have a child count of one. You can use {@link #addIndependentView(ViewGroup, ViewCreator)} to add a view that won't get destroyed.
+ * When a new screen is added using {@link #replaceViewBuilder(ViewCreator)}, the previous view will be replaced so that the container will still
+ * have a child count of one. You can use {@link #addIndependentViewBuilder(ViewGroup, ViewCreator)} to add a view that won't get destroyed.
  */
 public class LinearBackStack implements Reversible{
 
@@ -53,7 +51,7 @@ public class LinearBackStack implements Reversible{
     }
 
     /**
-     * Create a new Lienar BackStack with animations. This backstack will be associated with the TAG and will be retained
+     * Create a new Linear BackStack with animations. This backstack will be associated with the TAG and will be retained
      * across configuration changes. The default behaviour for a LienarBackStack is that newly added views
      * replace the previous view inside the container. Use the View Creator to create the view so that they
      * can be recreated later on if needed. Be careful not to capture a reference to the enclosing class or else
@@ -84,7 +82,7 @@ public class LinearBackStack implements Reversible{
 
             int id = container.getId();
             if (id == -1){
-                throw new RuntimeException("Container must have id set");
+                throw new RuntimeException("Parent container must have id set");
             }
 
             backStack.viewBackStack.add(new BackStackNode(id, creator, false, addAnimation, removeAnimation));
@@ -111,6 +109,7 @@ public class LinearBackStack implements Reversible{
         }
 
         backStack.topViewGroup = new WeakReference<ViewGroup>(newlyCreatedViewGroup);
+        backStack.topViewGroup.get().setClickable(true);
         return newlyCreatedViewGroup;
     }
 
@@ -140,21 +139,24 @@ public class LinearBackStack implements Reversible{
      * @param creator Create the view inside here
      * @return A new view builder
      */
-    public ViewBuilder addIndependentView(ViewGroup container, ViewCreator creator){
+    public ViewBuilder addIndependentViewBuilder(ViewGroup container, ViewCreator creator){
         return new ViewBuilder(this).addView(container, creator, true, false);
     }
 
-    public ViewBuilder addIndependentView(ViewGroup container, ViewCreator creator, boolean allowDuplicate){
+    /** Refer to link
+     * {@link LinearBackStack#addIndependentViewBuilder(ViewGroup, ViewCreator)}
+     *
+     * @param container The container that holds the view
+     * @param creator Create the view inside here
+     * @param allowDuplicate Allow duplicate view group to be added, not specifying equals false
+     * @return A new view builder
+     */
+    public ViewBuilder addIndependentViewBuilder(ViewGroup container, ViewCreator creator, boolean allowDuplicate){
         return new ViewBuilder(this).addView(container, creator, true, allowDuplicate);
     }
 
-    /**
-     * Default behaviour for this LinearBackStack. It will replace the most recent dependent ViewGroup inside the
-     * default container.
-     * @param creator Create the view inside here
-     * @return A new view builder
-     */
-    public ViewBuilder replaceView(ViewCreator creator){
+
+    public ViewBuilder replaceViewBuilder(ViewCreator creator){
         return new ViewBuilder(this).addView(getRootViewGroup(), creator, false, true);
     }
 

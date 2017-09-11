@@ -13,6 +13,11 @@ import timber.log.Timber;
  * Created by kevin on 2017-04-25.
  */
 
+/**
+ * A cluster back stack is useful for viewpagers and bottom bars. It does not store view creators,
+ * it merely delegates back events to the correct LinearBackStack. Use {@link #switchContext(int)}
+ * to specify which Linear Backstack should get the back event.
+ */
 public class ClusterBackStack implements Reversible{
 
     public String TAG;

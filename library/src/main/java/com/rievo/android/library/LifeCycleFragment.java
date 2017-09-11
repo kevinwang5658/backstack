@@ -5,7 +5,6 @@ import android.app.Application;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import timber.log.Timber;
 
@@ -17,7 +16,6 @@ public class LifeCycleFragment extends Fragment implements Application.ActivityL
 
     private static final String TAG = "com.rievo.android.LifeCycleFragment";
     private Activity activity;
-    private Class clazz;
 
     public LifeCycleFragment(){
         setRetainInstance(true);
@@ -52,7 +50,7 @@ public class LifeCycleFragment extends Fragment implements Application.ActivityL
 // /_/   /_/ |_/_/  |_\____/_/  /_/_____/_/ |_/ /_/    /_____/___/_/   /_____/\____/   /_/\____/_____/_____/
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
