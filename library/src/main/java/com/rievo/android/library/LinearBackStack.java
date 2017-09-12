@@ -46,7 +46,7 @@ public class LinearBackStack implements Reversible{
      * @param creator The view creator for the first view
      * @return The created view
      */
-    public static ViewGroup create(String TAG, ViewGroup container, ViewCreator creator){
+    public static LinearBackStack create(String TAG, ViewGroup container, ViewCreator creator){
         return LinearBackStack.create(TAG, container, creator, new DefaultAnimation(), new DefaultAnimation());
     }
 
@@ -63,7 +63,7 @@ public class LinearBackStack implements Reversible{
      * @param removeAnimation The remove animation. Be sure to call complete when it's done
      * @return The created view
      */
-    public static ViewGroup create(String TAG, ViewGroup container, ViewCreator creator, Animation addAnimation, Animation removeAnimation){
+    public static LinearBackStack create(String TAG, ViewGroup container, ViewCreator creator, Animation addAnimation, Animation removeAnimation){
         boolean newBackStack = false;
 
         LinearBackStack backStack = BackStackManager.getBackStack(TAG);
@@ -110,7 +110,7 @@ public class LinearBackStack implements Reversible{
 
         backStack.topViewGroup = new WeakReference<ViewGroup>(newlyCreatedViewGroup);
         backStack.topViewGroup.get().setClickable(true);
-        return newlyCreatedViewGroup;
+        return backStack;
     }
 
     /**
@@ -198,7 +198,6 @@ public class LinearBackStack implements Reversible{
 
     /*Same as addView but without adding it to the stack*/
     private ViewGroup createView(ViewGroup container, ViewCreator creator){
-        Timber.d(BackStackManager.getBackStackManager().getActivity() + "");
         ViewGroup viewGroup = creator.create(BackStackManager.getBackStackManager().getActivity().getLayoutInflater(), container);
         container.addView(viewGroup);
 

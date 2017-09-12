@@ -100,9 +100,6 @@ public class LifeCycleFragment extends Fragment implements Application.ActivityL
 
     @Override
     public void onActivityStopped(Activity activity) {
-        if (activity == this.activity) {
-            this.activity = null;
-        }
     }
 
     @Override
