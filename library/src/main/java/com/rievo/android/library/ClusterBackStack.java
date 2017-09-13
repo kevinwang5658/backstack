@@ -101,7 +101,7 @@ public class ClusterBackStack implements Reversible{
      */
     public void switchContext(int position){
         if (tagList.get(position) == null){
-            throw new RuntimeException("new position is out of bounds");
+            throw new RuntimeException("New Cluster Backstack position is out of bounds");
         }
 
         currentPosition = position;

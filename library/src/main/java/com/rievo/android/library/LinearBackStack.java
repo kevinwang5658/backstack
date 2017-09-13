@@ -16,7 +16,7 @@ import timber.log.Timber;
 /**
  * Main BackStack class. Default behaviour for this back stack is one container view with one screen.
  * When a new screen is added using {@link #replaceViewBuilder(ViewCreator)}, the previous view will be replaced so that the container will still
- * have a child count of one. You can use {@link #addIndependentViewBuilder(ViewGroup, ViewCreator)} to add a view that won't get destroyed.
+ * have a child count of one. You can use {@link #independentViewBuilder(ViewGroup, ViewCreator)} to add a view that won't get destroyed.
  */
 public class LinearBackStack implements Reversible{
 
@@ -115,7 +115,6 @@ public class LinearBackStack implements Reversible{
 
     /**
      * Get the LinearBackStack associated with the TAG
-     * @param TAG
      * @return LinearBackStack
      */
     public static LinearBackStack get(String TAG){
@@ -139,25 +138,12 @@ public class LinearBackStack implements Reversible{
      * @param creator Create the view inside here
      * @return A new view builder
      */
-    public ViewBuilder addIndependentViewBuilder(ViewGroup container, ViewCreator creator){
-        return new ViewBuilder(this).addView(container, creator, true, false);
+    public ViewBuilder getIndependentViewBuilder(ViewGroup container, ViewCreator creator){
+        return new ViewBuilder(this).addView(container, creator, true);
     }
 
-    /** Refer to link
-     * {@link LinearBackStack#addIndependentViewBuilder(ViewGroup, ViewCreator)}
-     *
-     * @param container The container that holds the view
-     * @param creator Create the view inside here
-     * @param allowDuplicate Allow duplicate view group to be added, not specifying equals false
-     * @return A new view builder
-     */
-    public ViewBuilder addIndependentViewBuilder(ViewGroup container, ViewCreator creator, boolean allowDuplicate){
-        return new ViewBuilder(this).addView(container, creator, true, allowDuplicate);
-    }
-
-
-    public ViewBuilder replaceViewBuilder(ViewCreator creator){
-        return new ViewBuilder(this).addView(getRootViewGroup(), creator, false, true);
+    public ViewBuilder getReplaceViewBuilder(ViewCreator creator){
+        return new ViewBuilder(this).addView(getRootViewGroup(), creator, false);
     }
 
     ViewGroup addView(ViewGroup container, ViewCreator creator, boolean isIndependent, boolean allowDuplicates, Animation addAnimation, Animation removeAnimation){

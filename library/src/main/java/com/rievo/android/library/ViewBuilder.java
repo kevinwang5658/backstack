@@ -14,22 +14,21 @@ public class ViewBuilder {
 
     LinearBackStack linearBackStack;
     ViewGroup container;
-    LinearBackStack.ViewCreator viewCreator;
+    LinearBackStack.ViewCreator viewCreator = null;
     LinearBackStack.Animation addAnimation = new LinearBackStack.DefaultAnimation();
     LinearBackStack.Animation removeAnimation = new LinearBackStack.DefaultAnimation();
 
     boolean isIndependent = false;
-    boolean allowDuplicates = true;
+    boolean allowDuplicates = false;
 
     ViewBuilder (LinearBackStack linearBackStack){
         this.linearBackStack = linearBackStack;
     }
 
-    ViewBuilder addView(ViewGroup container, LinearBackStack.ViewCreator creator, boolean isIndependent, boolean allowDuplicates){
+    ViewBuilder addView(ViewGroup container, LinearBackStack.ViewCreator viewCreator, boolean isIndependent){
         this.container = container;
-        this.viewCreator = creator;
+        this.viewCreator = viewCreator;
         this.isIndependent = isIndependent;
-        this.allowDuplicates = allowDuplicates;
 
         return this;
     }
@@ -57,10 +56,24 @@ public class ViewBuilder {
     }
 
     /**
+     * Allow duplicate views to be added
+     * @param allowDuplicates
+     * @return
+     */
+    public ViewBuilder setAllowDuplicates(boolean allowDuplicates){
+        this.allowDuplicates = allowDuplicates;
+        return this;
+    }
+
+    /**
      * Call this when you actually want to create a view. Don't forget me either!!! or else it won't work
      * @return created viewgroup
      */
     public ViewGroup done(){
+        if (viewCreator == null){
+            throw new RuntimeException("View creator must be set");
+        }
+
         return linearBackStack.addView(container, viewCreator, isIndependent, allowDuplicates, addAnimation, removeAnimation);
     }
 
