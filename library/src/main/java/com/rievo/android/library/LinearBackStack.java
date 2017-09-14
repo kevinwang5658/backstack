@@ -15,8 +15,8 @@ import timber.log.Timber;
 
 /**
  * Main BackStack class. Default behaviour for this back stack is one container view with one screen.
- * When a new screen is added using {@link #replaceViewBuilder(ViewCreator)}, the previous view will be replaced so that the container will still
- * have a child count of one. You can use {@link #independentViewBuilder(ViewGroup, ViewCreator)} to add a view that won't get destroyed.
+ * When a new screen is added using {@link #getReplaceViewBuilder(ViewCreator)}, the previous view will be replaced so that the container will still
+ * have a child count of one. You can use {@link #getIndependentViewBuilder(ViewGroup, ViewCreator)} to add a view that won't get destroyed.
  */
 public class LinearBackStack implements Reversible{
 
@@ -95,6 +95,7 @@ public class LinearBackStack implements Reversible{
                     break;
                 }
             }
+            //hi
 
             for (int counter = 0; counter < backStack.viewBackStack.size(); counter++){
                 BackStackNode node = backStack.viewBackStack.get(counter);
@@ -204,64 +205,52 @@ public class LinearBackStack implements Reversible{
      */
     @Override
     public boolean goBack(){
-        //If current page is a cluster backstack then it can handle the back
-        boolean isClusterBackSuccessful = false;
-        if (getCurrentViewGroup() instanceof ClusterBackStackImpl) {
-            isClusterBackSuccessful = ((ClusterBackStackImpl) getCurrentViewGroup()).getClusterBackStack().goBack();
+        //checks if this backstack only has 1 view left
+        if (viewBackStack.size() < 2) {
+            return false;
         }
 
-        if (isClusterBackSuccessful) {
-            return true;
+        BackStackNode nodeToBeRemoved = viewBackStack.get(viewBackStack.size() - 1);
+        BackStackNode nodeToBeAdded = viewBackStack.get(viewBackStack.size() - 2);
+
+        final ViewGroup viewToBeRemoved;
+        //remove currentNode
+        if (!nodeToBeRemoved.isIndependent) {
+            viewToBeRemoved = getCurrentViewGroup();
+            viewToBeRemoved.bringToFront();
+
+            nodeToBeRemoved.removeAnimation.animate(viewToBeRemoved, new AnimationComplete() {
+                @Override
+                public void complete() {
+                    getRootViewGroup().removeView(viewToBeRemoved);
+                }
+            });
         } else {
-            //cluster couldn't handle the back event
+            viewToBeRemoved = independentViewGroups.get(independentViewGroups.size() - 1).get();
+            final ViewGroup container = (ViewGroup) viewToBeRemoved.getParent();
 
-            //checks if this backstack only has 1 view left
-            if (viewBackStack.size() < 2) {
-                return false;
-            }
-
-            BackStackNode nodeToBeRemoved = viewBackStack.get(viewBackStack.size() - 1);
-            BackStackNode nodeToBeAdded = viewBackStack.get(viewBackStack.size() - 2);
-
-            final ViewGroup viewToBeRemoved;
-            //remove currentNode
-            if (!nodeToBeRemoved.isIndependent) {
-                viewToBeRemoved = getCurrentViewGroup();
-                viewToBeRemoved.bringToFront();
-
-                nodeToBeRemoved.removeAnimation.animate(viewToBeRemoved, new AnimationComplete() {
-                    @Override
-                    public void complete() {
-                        getRootViewGroup().removeView(viewToBeRemoved);
-                    }
-                });
-            } else {
-                viewToBeRemoved = independentViewGroups.get(independentViewGroups.size() - 1).get();
-                final ViewGroup container = (ViewGroup) viewToBeRemoved.getParent();
-
-                //animation
-                nodeToBeRemoved.removeAnimation.animate(viewToBeRemoved, new AnimationComplete() {
-                    @Override
-                    public void complete() {
-                        container.removeView(viewToBeRemoved);
-                        independentViewGroups.remove(independentViewGroups.size() - 1);
-                    }
-                });
-            }
-
-            //add previous view
-            if (!nodeToBeAdded.isIndependent && !nodeToBeRemoved.isIndependent) {
-                ViewGroup newlyCreatedViewGroup = createView(getRootViewGroup(), nodeToBeAdded.viewCreator);
-
-                viewToBeRemoved.bringToFront();
-
-                topViewGroup = new WeakReference<>(newlyCreatedViewGroup);
-            }
-
-            viewBackStack.remove(viewBackStack.size() - 1);
-
-            return true;
+            //animation
+            nodeToBeRemoved.removeAnimation.animate(viewToBeRemoved, new AnimationComplete() {
+                @Override
+                public void complete() {
+                    container.removeView(viewToBeRemoved);
+                    independentViewGroups.remove(independentViewGroups.size() - 1);
+                }
+            });
         }
+
+        //add previous view
+        if (!nodeToBeAdded.isIndependent && !nodeToBeRemoved.isIndependent) {
+            ViewGroup newlyCreatedViewGroup = createView(getRootViewGroup(), nodeToBeAdded.viewCreator);
+
+            viewToBeRemoved.bringToFront();
+
+            topViewGroup = new WeakReference<>(newlyCreatedViewGroup);
+        }
+
+        viewBackStack.remove(viewBackStack.size() - 1);
+
+        return true;
 
     }
     //</editor-fold>
