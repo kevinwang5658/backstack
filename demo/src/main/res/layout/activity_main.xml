@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:background="#000000"
     android:id="@+id/root">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        ></android.support.v4.view.ViewPager>
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom"
         app:menu="@menu/bottom"
