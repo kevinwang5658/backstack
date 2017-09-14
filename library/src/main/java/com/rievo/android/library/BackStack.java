@@ -55,4 +55,8 @@ public class BackStack {
         this.backStackManager = backStackManager;
     }
 
+    void onDestroy(){
+        backStackManager = null;
+    }
+
 }

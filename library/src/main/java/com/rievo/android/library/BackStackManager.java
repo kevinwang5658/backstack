@@ -1,6 +1,7 @@
 package com.rievo.android.library;
 
 import android.app.Activity;
+import android.view.ViewGroup;
 
 import java.util.HashMap;
 
@@ -20,13 +21,47 @@ import timber.log.Timber;
 public class BackStackManager {
 
     private Activity activity;
-    HashMap<String, Reversible> backStackMap = new HashMap<>();
+    HashMap<String, LinearBackStack> backStackMap = new HashMap<>();
+    HashMap<String, LinearBackStack.State> stateMap = new HashMap<>();
 
-    BackStackManager(Activity activity){
+    BackStackManager(Activity activity) {
         this.activity = activity;
 
         Timber.d("New BackStackManager");
     }
+
+    void onDestroy(){
+        backStackMap = null;
+    }
+
+    public LinearBackStack createLinearBackStack(String TAG, ViewGroup container, ViewCreator firstView){
+        this.createLinearBackStackCurrent("a", container, firstView);
+        LinearBackStack.State state = stateMap.get(TAG);
+        if (state == null){
+            state = new LinearBackStack.State(TAG);
+            stateMap.put(TAG, state);
+        }
+
+        LinearBackStack linearBackStack = new LinearBackStack(state, container);
+        backStackMap.put(TAG, linearBackStack);
+
+        return linearBackStack;
+    }
+
+    public LinearBackStack createLinearBackStackCurrent(String TAG, ViewGroup currentView, ViewCreator currentViewCreator){
+        LinearBackStack.State state = stateMap.get(TAG);
+        if (state == null){
+            state = new LinearBackStack.State(TAG);
+            stateMap.put(TAG, state);
+        }
+
+        LinearBackStack linearBackStack = new LinearBackStack(state, (ViewGroup) currentView.getParent());
+        backStackMap.put(TAG, linearBackStack);
+
+        return linearBackStack;
+    }
+
+    boolean goBack(){return false;}
 
     void setActivity(Activity activity){
         this.activity = activity;
@@ -35,6 +70,4 @@ public class BackStackManager {
     Activity getActivity(){
         return activity;
     }
-
-    boolean goBack(){return false;}
 }

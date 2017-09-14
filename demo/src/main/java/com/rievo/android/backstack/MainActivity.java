@@ -8,6 +8,10 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.rievo.android.library.BackStack;
+import com.rievo.android.library.BackStackManager;
+import com.rievo.android.library.ViewCreator;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -18,12 +22,20 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.root) RelativeLayout root;
     @BindView(R.id.view_pager) ViewPager viewPager;
 
+    BackStackManager backStackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        BackStack.install(this);
+
+        backStackManager = BackStack.getBackStackManager();
+        backStackManager.createLinearBackStack("ABC", root, (layoutInflater, container) -> {
+            return null;
+        });
 
     }
 
