@@ -1,7 +1,7 @@
 package com.rievo.android.library;
 
 /**
- * Created by kevin on 2017-04-26.
+ * Created by kwang on 2017-09-13.
  */
 
 public interface Reversible {
