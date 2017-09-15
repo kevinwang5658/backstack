@@ -84,7 +84,7 @@ public class RetainedFragment extends Fragment implements Application.ActivityLi
     @Override
     public void onActivityDestroyed(Activity activity) {
         this.activity = null;
-        BackStack.get().onDestroy();
+        BackStack.getSelf().onDestroy();
         backStackManager.onDestroy();
     }
 }

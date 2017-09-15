@@ -34,11 +34,17 @@ public class BackStack {
             fragment.set(activity, new BackStackManager(activity));
         }
 
-        backStack = new BackStack(fragment.getBackStackManager());
+        backStack = new BackStack(fragment.getBackStackManager(
+        ));
     }
 
-    static BackStack get(){
+
+    static BackStack getSelf(){
         return backStack;
+    }
+
+    public static LinearBackStack get(String TAG){
+        return backStack.backStackManager.getLinearBackstack(TAG);
     }
 
     public static BackStackManager getBackStackManager(){

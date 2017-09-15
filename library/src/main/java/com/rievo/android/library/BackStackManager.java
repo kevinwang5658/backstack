@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.view.ViewGroup;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
 /**
@@ -31,37 +34,41 @@ public class BackStackManager {
     }
 
     void onDestroy(){
-        backStackMap = null;
+        backStackMap.clear();
     }
 
     public LinearBackStack createLinearBackStack(String TAG, ViewGroup container, ViewCreator firstView){
-        this.createLinearBackStackCurrent("a", container, firstView);
-        LinearBackStack.State state = stateMap.get(TAG);
-        if (state == null){
-            state = new LinearBackStack.State(TAG);
-            stateMap.put(TAG, state);
-        }
-
-        LinearBackStack linearBackStack = new LinearBackStack(state, container);
+        LinearBackStack.State state = retrieveOrCreateState(TAG, firstView);
+        LinearBackStack linearBackStack = new LinearBackStack(state, container, activity);
         backStackMap.put(TAG, linearBackStack);
+        linearBackStack.init();
 
         return linearBackStack;
     }
 
     public LinearBackStack createLinearBackStackCurrent(String TAG, ViewGroup currentView, ViewCreator currentViewCreator){
-        LinearBackStack.State state = stateMap.get(TAG);
-        if (state == null){
-            state = new LinearBackStack.State(TAG);
-            stateMap.put(TAG, state);
-        }
-
-        LinearBackStack linearBackStack = new LinearBackStack(state, (ViewGroup) currentView.getParent());
+        LinearBackStack.State state = retrieveOrCreateState(TAG, currentViewCreator);
+        LinearBackStack linearBackStack = new LinearBackStack(state, (ViewGroup) currentView.getParent(), activity);
         backStackMap.put(TAG, linearBackStack);
 
         return linearBackStack;
     }
 
-    boolean goBack(){return false;}
+    private LinearBackStack.State retrieveOrCreateState(String TAG, ViewCreator firstView){
+        LinearBackStack.State state = stateMap.get(TAG);
+        if (state == null){
+            BackStackNode backStackNode = new BackStackNode(firstView);
+            state = new LinearBackStack.State(TAG, backStackNode);
+            stateMap.put(TAG, state);
+        }
+
+        return state;
+    }
+
+    public boolean goBack(){
+        backStackMap.get("ABC").goBack();
+        return true;
+    }
 
     void setActivity(Activity activity){
         this.activity = activity;
@@ -69,5 +76,18 @@ public class BackStackManager {
 
     Activity getActivity(){
         return activity;
+    }
+
+    public LinearBackStack getLinearBackstack(String TAG){
+        return backStackMap.get(TAG);
+    }
+
+    public static class LinearBackStackBuilder{
+        ViewCreator creator;
+        ViewGroup currentViewGroup;
+        ViewGroup container;
+        boolean shouldRetain = false;
+
+
     }
 }

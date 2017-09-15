@@ -8,5 +8,11 @@ import android.view.ViewGroup;
  */
 
 public interface ViewCreator {
+    /**
+     * Must ensure that the view is added to the container by the end of this method
+     * @param layoutInflater
+     * @param container
+     * @return
+     */
     ViewGroup create(LayoutInflater layoutInflater, ViewGroup container);
 }
