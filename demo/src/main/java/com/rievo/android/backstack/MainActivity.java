@@ -32,13 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         BackStack.install(this);
-
         backStackManager = BackStack.getBackStackManager();
-        backStackManager.createLinearBackStack("ABC", topReplace, (layoutInflater, container) -> {
-            ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.demo_layout, container, false);
-            container.addView(viewGroup);
-            return viewGroup;
-        });
+
+        LayoutInflater.from(this).inflate(R.layout.layout, topReplace, true);
     }
 
 

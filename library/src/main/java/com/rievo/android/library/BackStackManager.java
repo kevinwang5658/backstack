@@ -46,9 +46,27 @@ public class BackStackManager {
         return linearBackStack;
     }
 
-    public LinearBackStack createLinearBackStackCurrent(String TAG, ViewGroup currentView, ViewCreator currentViewCreator){
-        LinearBackStack.State state = retrieveOrCreateState(TAG, currentViewCreator);
-        LinearBackStack linearBackStack = new LinearBackStack(state, (ViewGroup) currentView.getParent(), activity);
+    public LinearBackStackBuilder linearBackStackBuilder(String TAG){
+        return new LinearBackStackBuilder(this, TAG);
+    }
+
+    private LinearBackStack buildLinearBackStack(String TAG, ViewGroup container, ViewGroup currentView, ViewCreator viewCreator, boolean shouldRetain){
+        LinearBackStack.State state = stateMap.get(TAG);
+        if (state == null){
+            BackStackNode backStackNode = new BackStackNode(viewCreator, container.getId(), shouldRetain);
+            state = new LinearBackStack.State(TAG, backStackNode);
+            stateMap.put(TAG, state);
+        }
+
+        LinearBackStack linearBackStack = new LinearBackStack(state, container, activity);
+        if (currentView == null){
+            linearBackStack.init();
+        } else {
+            if (state.nodeStack.size() != 1 && !shouldRetain){
+                container.removeView(currentView);
+            }
+            linearBackStack.initWithoutFirst(currentView);
+        }
         backStackMap.put(TAG, linearBackStack);
 
         return linearBackStack;
@@ -83,11 +101,58 @@ public class BackStackManager {
     }
 
     public static class LinearBackStackBuilder{
+
+        BackStackManager backStackManager;
+
+        String TAG;
         ViewCreator creator;
         ViewGroup currentViewGroup;
         ViewGroup container;
         boolean shouldRetain = false;
 
+        private LinearBackStackBuilder(BackStackManager backStackManager, String TAG){
+            this.backStackManager = backStackManager;
+            this.TAG = TAG;
+        }
 
+        public LinearBackStackBuilder viewCreator(ViewCreator viewCreator){
+            this.creator = viewCreator;
+            return this;
+        }
+
+        public LinearBackStackBuilder setContainer(ViewGroup container) {
+            this.container = container;
+            return this;
+        }
+
+        public LinearBackStackBuilder useCurrentViewGroup(ViewGroup currentViewGroup) {
+            this.currentViewGroup = currentViewGroup;
+            return this;
+        }
+
+        public LinearBackStackBuilder shouldRetain(boolean shouldRetain){
+            this.shouldRetain = shouldRetain;
+            return this;
+        }
+
+        public LinearBackStack build(){
+            if (creator == null){
+                throw new RuntimeException("View Creator must be set");
+            }
+
+            if (currentViewGroup == null && container == null){
+                throw new RuntimeException("Either CurrentView must be set or Parent Container must be set");
+            }
+
+            if (currentViewGroup != null && container != null && currentViewGroup.getParent() != container){
+                throw new RuntimeException("Container must be the parent of CurrentView");
+            }
+
+            if (container == null){
+                container = (ViewGroup) currentViewGroup.getParent();
+            }
+
+            return backStackManager.buildLinearBackStack(TAG, container, currentViewGroup, creator, shouldRetain);
+        }
     }
 }

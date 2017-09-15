@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 import java.util.HashMap;
 import java.util.Stack;
 
-import timber.log.Timber;
+import static com.rievo.android.library.Helper.disable;
+import static com.rievo.android.library.Helper.enable;
 
 /**
  * Created by kwang on 2017-09-14.
  */
 
-public class LinearBackStack implements Reversible{
+public class LinearBackStack implements BStack{
 
     static final class State{
         public final String TAG;
@@ -26,7 +27,7 @@ public class LinearBackStack implements Reversible{
     }
 
     private ViewGroup container;
-    private HashMap<Integer, Independent> retainStack = new HashMap<>();
+    private HashMap<Integer, RetainHolder> retainMap = new HashMap<>();
     private ViewGroup currentView;
     private State s;
     private Activity activity;
@@ -41,23 +42,47 @@ public class LinearBackStack implements Reversible{
         this.s = state;
         this.activity = activity;
         this.layoutInflater = activity.getLayoutInflater();
-
-        //Parent Container should only contain 1 view
-        if (container.getChildCount() != 0){
-            throw new RuntimeException("Parent Container should not contain any views");
-        }
     }
 
     void init(){
-        for (BackStackNode node: s.nodeStack){
+        for (int i = 0; i < s.nodeStack.size(); i++){
+            BackStackNode node = s.nodeStack.get(i);
             if (node.shouldRetain){
                 currentView = addView(node);
+                addToRetainStack(i, node, currentView);
             }
         }
 
         if (!s.nodeStack.peek().shouldRetain) {
             currentView = addView(s.nodeStack.peek());
         }
+    }
+
+    void initWithoutFirst(ViewGroup firstViewGroup){
+        currentView = firstViewGroup;
+        if (s.nodeStack.get(0).shouldRetain){
+            addToRetainStack(0, s.nodeStack.get(0), currentView);
+        }
+
+        for (int i = 0; i < s.nodeStack.size(); i++){
+            BackStackNode node = s.nodeStack.get(i);
+            if (node != s.nodeStack.get(0) && node.shouldRetain){
+                currentView = addView(node);
+                addToRetainStack(i, node, currentView);
+            }
+        }
+
+        if (s.nodeStack.size() != 1 && !s.nodeStack.peek().shouldRetain) {
+            currentView = addView(s.nodeStack.peek());
+        }
+    }
+
+    private void addToRetainStack(int i, BackStackNode node, ViewGroup viewGroup){
+        retainMap.put(i, new RetainHolder(
+                (ViewGroup) viewGroup.getParent(),
+                node.viewCreator,
+                viewGroup
+        ));
     }
 
     private ViewGroup addView(BackStackNode backStackNode){
@@ -85,11 +110,12 @@ public class LinearBackStack implements Reversible{
         parent.removeView(viewGroup);
     }
 
-    public void replace(ViewCreator viewCreator){
+    public void add(ViewCreator viewCreator){
         BackStackNode backStackNode = new BackStackNode(viewCreator);
         final ViewGroup tempView = currentView;
         final BackStackNode tempNode = s.nodeStack.peek();
 
+        disable(tempView);
         s.nodeStack.add(backStackNode);
         currentView = addView(backStackNode);
         removeView(tempNode, tempView);
@@ -104,6 +130,7 @@ public class LinearBackStack implements Reversible{
         final ViewGroup tempView = currentView;
         final BackStackNode tempNode = s.nodeStack.peek();
 
+        disable(tempView);
         s.nodeStack.add(backStackNode);
         currentView = addView(backStackNode);
         removeView(tempNode, tempView);
@@ -113,8 +140,12 @@ public class LinearBackStack implements Reversible{
         final ViewGroup tempView = currentView;
         final BackStackNode tempNode = s.nodeStack.peek();
 
+        disable(tempView);
         s.nodeStack.add(backStackNode);
         currentView = addView(backStackNode);
+        if (backStackNode.shouldRetain){
+            addToRetainStack(retainMap.size(), backStackNode, currentView);
+        }
 
         if (backStackNode.addAnimator != null){
             backStackNode.addAnimator.animate(currentView, ()->{
@@ -131,12 +162,25 @@ public class LinearBackStack implements Reversible{
 
     @Override
     public boolean goBack() {
+        if (currentView instanceof Reversible && ((Reversible) currentView).onBack()){
+            return true;
+        }
+
         if (s.nodeStack.size() > 1) {
             final ViewGroup tempView = currentView;
             final BackStackNode tempNode = s.nodeStack.pop();
             final BackStackNode backStackNode = s.nodeStack.peek();
 
-            currentView = addView(backStackNode);
+            if (tempNode.shouldRetain){
+                retainMap.remove(s.nodeStack.size());
+            }
+
+            if (!backStackNode.shouldRetain) {
+                currentView = addView(backStackNode);
+            } else {
+                currentView = retainMap.get(s.nodeStack.size() - 1).retainedView;
+            }
+            enable(currentView);
 
             if (tempNode.removeAnimator != null) {
                 tempNode.removeAnimator.animate(tempView, ()->{
@@ -152,15 +196,15 @@ public class LinearBackStack implements Reversible{
         }
     }
 
-    static class Independent{
+    static class RetainHolder {
         ViewGroup container;
         ViewCreator viewCreator;
-        ViewGroup independent;
+        ViewGroup retainedView;
 
-        Independent(ViewGroup container, ViewCreator viewCreator, ViewGroup independent){
+        RetainHolder(ViewGroup container, ViewCreator viewCreator, ViewGroup independent){
             this.container = container;
             this.viewCreator = viewCreator;
-            this.independent = independent;
+            this.retainedView = independent;
         }
     }
 

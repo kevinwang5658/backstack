@@ -10,12 +10,15 @@ import android.widget.RelativeLayout;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.rievo.android.library.BackStack;
+import com.rievo.android.library.Reversible;
+
+import timber.log.Timber;
 
 /**
  * Created by kwang on 2017-09-14.
  */
 
-public class ViewGroup1 extends RelativeLayout{
+public class ViewGroup1 extends RelativeLayout implements Reversible{
 
     Button button;
 
@@ -67,5 +70,11 @@ public class ViewGroup1 extends RelativeLayout{
                     })
                     .build();
         });
+    }
+
+    @Override
+    public boolean onBack() {
+        Timber.d("hi");
+        return false;
     }
 }
