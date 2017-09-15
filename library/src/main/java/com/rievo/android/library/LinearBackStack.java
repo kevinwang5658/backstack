@@ -20,7 +20,7 @@ import static com.rievo.android.library.Helper.enable;
 public class LinearBackStack implements BStack{
 
     /**
-     * State that is to be persisted
+     * State that is persisted
      */
     static final class State{
         public final String TAG;
@@ -71,8 +71,8 @@ public class LinearBackStack implements BStack{
     }
 
     /**
-     * Initialize this Linear BackStack ignoring the first node. This is used when the ViewGroup that
-     * this function was called from is the also the first View in the stack. Follows the same initialization as {@link #init()}
+     * Initialize this Linear BackStack ignoring the first node. Use this method if the calling ViewGroup should
+     * also be the first view within the stack. Follows the same initialization as {@link #init()}
      * @param firstViewGroup
      */
     void initWithoutFirst(ViewGroup firstViewGroup){
@@ -141,7 +141,8 @@ public class LinearBackStack implements BStack{
     //**************************
 
     /**
-     * Adds a new view onto the stack. This will add it to the default container of the LinearBackStack
+     * Adds a new view onto the stack. This will add it to the default container of the LinearBackStack.
+     * Views that aren't at the top of the stack will non-clickable
      * @param viewCreator The view creator for the new view
      */
     public void add(ViewCreator viewCreator){
@@ -157,7 +158,8 @@ public class LinearBackStack implements BStack{
 
     /**
      * Adds a new view onto the stack. This will add it to the container specified. Only containers that
-     * are lower or equal position in the view hierarchy as the default container are allowed
+     * are lower or equal position in the view hierarchy as the default container are allowed.
+     * Views that aren't at the top of the stack will non-clickable.
      * @param viewCreator The view creator for the new view
      * @param container The container to add the view to
      */
@@ -325,7 +327,8 @@ public class LinearBackStack implements BStack{
         }
 
         /**
-         * Builds the new view. The view will be synchronously added in this method
+         * Builds the new view. The view will be synchronously added in this method. The view will be
+         * added to the top of the stack. Views that aren't at the top of the stack will non-clickable
          */
         public void build(){
             BackStackNode backStackNode = new BackStackNode(

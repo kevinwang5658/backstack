@@ -10,7 +10,7 @@ import android.os.Bundle;
 
 /**
  * Singleton helper class to facilitate access to BackStackManager. It in itself is pretty useless. I just use
- * this class so that I don't have to worry about lifetimes since BackstackManager isn't a singleton, it follows
+ * this class so that I don't have to worry about lifetimes since BackStackManager isn't a singleton, it follows
  * the lifetime of a retained fragment.
  */
 public class BackStack {
