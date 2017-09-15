@@ -74,7 +74,6 @@ public class ViewGroup1 extends RelativeLayout implements Reversible{
 
     @Override
     public boolean onBack() {
-        Timber.d("hi");
         return false;
     }
 }

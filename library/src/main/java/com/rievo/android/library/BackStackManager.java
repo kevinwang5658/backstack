@@ -16,16 +16,17 @@ import timber.log.Timber;
 
 /**
  * This is the heart of the library. The lifetime of this class should already be taken care of. This class
- * is created when the app is first created and ends the app ends (when isFinish is true not when the process
+ * is created when the app is first created and ends the app ends (when {@link Activity#isFinishing()} returns true not when the process
  * is destroyed). The lifetime should be managed by BackStack and Retained Fragment. This object should be available
- * as soon as BackStack#install(Activity) is called and should be available in an activity from anytime then on except
- * for onDestroy.
+ * as soon as {@link BackStack#install(Activity)} is called and should be available in an activity from anytime then on except
+ * for inside onDestroy.
  */
 public class BackStackManager {
 
     private Activity activity;
     HashMap<String, LinearBackStack> backStackMap = new HashMap<>();
     HashMap<String, LinearBackStack.State> stateMap = new HashMap<>();
+    private String defaultBackStackTAG = "";
 
     BackStackManager(Activity activity) {
         this.activity = activity;
@@ -51,6 +52,10 @@ public class BackStackManager {
         LinearBackStack linearBackStack = new LinearBackStack(state, container, activity);
         backStackMap.put(TAG, linearBackStack);
         linearBackStack.init();
+
+        if (defaultBackStackTAG.equals("")){
+            defaultBackStackTAG = TAG;
+        }
 
         return linearBackStack;
     }
@@ -85,6 +90,9 @@ public class BackStackManager {
             linearBackStack.initWithoutFirst(currentView);
         }
         backStackMap.put(TAG, linearBackStack);
+        if (defaultBackStackTAG.equals("")){
+            defaultBackStackTAG = TAG;
+        }
 
         return linearBackStack;
     }
@@ -107,7 +115,7 @@ public class BackStackManager {
      * @return if the back event was handled
      */
     public boolean goBack(){
-        backStackMap.get("ABC").goBack();
+        backStackMap.get(defaultBackStackTAG).goBack();
         return true;
     }
 
