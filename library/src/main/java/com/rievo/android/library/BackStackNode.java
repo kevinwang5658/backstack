@@ -4,6 +4,9 @@ package com.rievo.android.library;
  * Created by kwang on 2017-09-14.
  */
 
+/**
+ * View Group creation information. Safe for persistence
+ */
 public class BackStackNode {
     ViewCreator viewCreator;
     int containerId = -1;

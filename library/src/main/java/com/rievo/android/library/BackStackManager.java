@@ -37,6 +37,15 @@ public class BackStackManager {
         backStackMap.clear();
     }
 
+    /**
+     * Creates a new linear BackStack. Backstacks will handle all back navigation for it's ViewGroups as along as
+     * all ViewGroups were added using the backstacks add or build methods. This BackStack's state will get persisted
+     * through rotations. All backstacks must have a unique tag to reference it.
+     * @param TAG Unique tag to reference back stack
+     * @param container Default container to place views
+     * @param firstView View Creator for first view in backstack
+     * @return the created backstack
+     */
     public LinearBackStack createLinearBackStack(String TAG, ViewGroup container, ViewCreator firstView){
         LinearBackStack.State state = retrieveOrCreateState(TAG, firstView);
         LinearBackStack linearBackStack = new LinearBackStack(state, container, activity);
@@ -46,10 +55,18 @@ public class BackStackManager {
         return linearBackStack;
     }
 
+    /**
+     * Builds a new linear BackStack. Backstacks will handle all back navigation for it's ViewGroups as along as
+     * all ViewGroups were added using the backstacks add or build methods. This BackStack's state will get persisted
+     * through rotations. All backstacks must have a unique tag to reference it.
+     * @param TAG Unique tag to reference back stack
+     * @return the created backstack
+     */
     public LinearBackStackBuilder linearBackStackBuilder(String TAG){
         return new LinearBackStackBuilder(this, TAG);
     }
 
+    //Called by the builder to build the backstack
     private LinearBackStack buildLinearBackStack(String TAG, ViewGroup container, ViewGroup currentView, ViewCreator viewCreator, boolean shouldRetain){
         LinearBackStack.State state = stateMap.get(TAG);
         if (state == null){
@@ -72,6 +89,7 @@ public class BackStackManager {
         return linearBackStack;
     }
 
+    //Helper method to retrieve state
     private LinearBackStack.State retrieveOrCreateState(String TAG, ViewCreator firstView){
         LinearBackStack.State state = stateMap.get(TAG);
         if (state == null){
@@ -83,23 +101,37 @@ public class BackStackManager {
         return state;
     }
 
+    /**
+     * Call within {@link Activity#onBackPressed()}. The backstack manager will be notified and internally
+     * handle the back event.
+     * @return if the back event was handled
+     */
     public boolean goBack(){
         backStackMap.get("ABC").goBack();
         return true;
     }
 
+    //Sets the activity
     void setActivity(Activity activity){
         this.activity = activity;
     }
 
+    //Gets the activity
     Activity getActivity(){
         return activity;
     }
 
+    /**
+     * Retrieves a linear back stack using the TAG
+     * @param TAG The backstack TAG or null if it doesn't exist
+     */
     public LinearBackStack getLinearBackstack(String TAG){
         return backStackMap.get(TAG);
     }
 
+    /**
+     * Builds a new linear back stack
+     */
     public static class LinearBackStackBuilder{
 
         BackStackManager backStackManager;
@@ -115,26 +147,51 @@ public class BackStackManager {
             this.TAG = TAG;
         }
 
+        /**
+         * The ViewCreator for the first view in the stack. This must be set.
+         * @param viewCreator the first view creator
+         * @return
+         */
         public LinearBackStackBuilder viewCreator(ViewCreator viewCreator){
             this.creator = viewCreator;
             return this;
         }
 
+        /**
+         * Sets the default container for the linear back stack
+         * @param container the parent container
+         * @return
+         */
         public LinearBackStackBuilder setContainer(ViewGroup container) {
             this.container = container;
             return this;
         }
 
+        /**
+         * Use the current ViewGroup as the first View within the stack. {@link #setContainer(ViewGroup)} doesn't have
+         * to be set if this is set. If both are set the container must be a parent of currentViewGroup.
+         * @param currentViewGroup the view group to be used as first view within the stack
+         * @return
+         */
         public LinearBackStackBuilder useCurrentViewGroup(ViewGroup currentViewGroup) {
             this.currentViewGroup = currentViewGroup;
             return this;
         }
 
+        /**
+         * Should the first view be retained. See {@link LinearBackStack.Builder#setRetain(boolean)}
+         * @param shouldRetain should the view be retained
+         * @return
+         */
         public LinearBackStackBuilder shouldRetain(boolean shouldRetain){
             this.shouldRetain = shouldRetain;
             return this;
         }
 
+        /**
+         * Creates the new back stack
+         * @return
+         */
         public LinearBackStack build(){
             if (creator == null){
                 throw new RuntimeException("View Creator must be set");

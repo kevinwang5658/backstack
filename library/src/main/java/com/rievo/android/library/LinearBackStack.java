@@ -14,8 +14,14 @@ import static com.rievo.android.library.Helper.enable;
  * Created by kwang on 2017-09-14.
  */
 
+/**
+ * A linear backstack flow
+ */
 public class LinearBackStack implements BStack{
 
+    /**
+     * State that is to be persisted
+     */
     static final class State{
         public final String TAG;
         Stack<BackStackNode> nodeStack = new Stack<>();
@@ -26,6 +32,9 @@ public class LinearBackStack implements BStack{
         }
     }
 
+    /**
+     * State that isn't persisted
+     */
     private ViewGroup container;
     private HashMap<Integer, RetainHolder> retainMap = new HashMap<>();
     private ViewGroup currentView;
@@ -44,6 +53,9 @@ public class LinearBackStack implements BStack{
         this.layoutInflater = activity.getLayoutInflater();
     }
 
+    /**
+     * Normal initialization. This will add all retained ViewGroups as well as the final view on the stack
+     */
     void init(){
         for (int i = 0; i < s.nodeStack.size(); i++){
             BackStackNode node = s.nodeStack.get(i);
@@ -58,6 +70,11 @@ public class LinearBackStack implements BStack{
         }
     }
 
+    /**
+     * Initialize this Linear BackStack ignoring the first node. This is used when the ViewGroup that
+     * this function was called from is the also the first View in the stack. Follows the same initialization as {@link #init()}
+     * @param firstViewGroup
+     */
     void initWithoutFirst(ViewGroup firstViewGroup){
         currentView = firstViewGroup;
         if (s.nodeStack.get(0).shouldRetain){
@@ -77,6 +94,11 @@ public class LinearBackStack implements BStack{
         }
     }
 
+    //*************************
+    // Helper Methods
+    //*************************
+
+    //Shortens the method to add to retain stack. Should be called whenever a retained view is added
     private void addToRetainStack(int i, BackStackNode node, ViewGroup viewGroup){
         retainMap.put(i, new RetainHolder(
                 (ViewGroup) viewGroup.getParent(),
@@ -85,6 +107,8 @@ public class LinearBackStack implements BStack{
         ));
     }
 
+    //Helps add a view using a backstack node. It is container aware and will add to the correct
+    //container
     private ViewGroup addView(BackStackNode backStackNode){
         //Gets the correct parent
         ViewGroup parent = null;
@@ -98,6 +122,7 @@ public class LinearBackStack implements BStack{
 
     }
 
+    //Helps remove a view. It is retain aware
     private void removeView(BackStackNode backStackNode, ViewGroup viewGroup){
         if (!backStackNode.shouldRetain){
             ViewGroup parent = (ViewGroup) viewGroup.getParent();
@@ -105,11 +130,20 @@ public class LinearBackStack implements BStack{
         }
     }
 
+    //Helps remove a view. Not retain Aware
     private void forceRemoveView(BackStackNode backStackNode, ViewGroup viewGroup){
         ViewGroup parent = (ViewGroup) viewGroup.getParent();
         parent.removeView(viewGroup);
     }
 
+    //**************************
+    // Public Functions
+    //**************************
+
+    /**
+     * Adds a new view onto the stack. This will add it to the default container of the LinearBackStack
+     * @param viewCreator The view creator for the new view
+     */
     public void add(ViewCreator viewCreator){
         BackStackNode backStackNode = new BackStackNode(viewCreator);
         final ViewGroup tempView = currentView;
@@ -121,6 +155,12 @@ public class LinearBackStack implements BStack{
         removeView(tempNode, tempView);
     }
 
+    /**
+     * Adds a new view onto the stack. This will add it to the container specified. Only containers that
+     * are lower or equal position in the view hierarchy as the default container are allowed
+     * @param viewCreator The view creator for the new view
+     * @param container The container to add the view to
+     */
     public void add(ViewCreator viewCreator, ViewGroup container){
         if (container.getId() == -1){
             throw new RuntimeException("Container must have an id set");
@@ -136,7 +176,8 @@ public class LinearBackStack implements BStack{
         removeView(tempNode, tempView);
     }
 
-    public void build(final BackStackNode backStackNode){
+    //Called by the builder. This is the full option add.
+    private void build(final BackStackNode backStackNode){
         final ViewGroup tempView = currentView;
         final BackStackNode tempNode = s.nodeStack.peek();
 
@@ -156,10 +197,19 @@ public class LinearBackStack implements BStack{
         }
     }
 
+    /**
+     * Creates a builder to help construct the new ViewGroup. This offers the most options for construction.
+     * @param viewCreator The view creator for the new view
+     * @return A view builder
+     */
     public Builder builder(ViewCreator viewCreator){
         return new Builder(this, viewCreator);
     }
 
+    /**
+     * Pretty important method. This is responsible for handling the back events for the entire stack
+     * @return true if back was handled
+     */
     @Override
     public boolean goBack() {
         if (currentView instanceof Reversible && ((Reversible) currentView).onBack()){
@@ -196,6 +246,7 @@ public class LinearBackStack implements BStack{
         }
     }
 
+    //Holds view information for all retained views
     static class RetainHolder {
         ViewGroup container;
         ViewCreator viewCreator;
@@ -208,6 +259,9 @@ public class LinearBackStack implements BStack{
         }
     }
 
+    /**
+     * A builder for a new view group
+     */
     public static class Builder{
 
         LinearBackStack linearBackStack;
@@ -223,11 +277,21 @@ public class LinearBackStack implements BStack{
             this.viewCreator = viewCreator;
         }
 
+        /**
+         * Sets if the view should be retained. Retained views won't get destroyed when new views are added
+         * @param shouldRetain Should the view be retained
+         * @return
+         */
         public Builder setRetain(boolean shouldRetain){
             this.shouldRetain = shouldRetain;
             return this;
         }
 
+        /**
+         * Sets the parent container for the new view. The parent
+         * @param container
+         * @return
+         */
         public Builder setContainer(ViewGroup container){
             if (container.getId() == -1){
                 throw new RuntimeException("Parent Container must have id set");
@@ -238,16 +302,31 @@ public class LinearBackStack implements BStack{
             return this;
         }
 
+        /**
+         * Sets the add animator. This animator will be called when a view is added. Remember
+         * to call emitter.done().
+         * @param addAnimator The add animation
+         * @return
+         */
         public Builder addAnimator(Animator addAnimator){
             this.addAnimator = addAnimator;
             return this;
         }
 
+        /**
+         * Sets the remove animator. This animator will be called when back is pressed and the view
+         * is removed. Remember to call emitter.done().
+         * @param removeAnimator The add animation
+         * @return
+         */
         public Builder removeAnimator(Animator removeAnimator){
             this.removeAnimator = removeAnimator;
             return this;
         }
 
+        /**
+         * Builds the new view. The view will be synchronously added in this method
+         */
         public void build(){
             BackStackNode backStackNode = new BackStackNode(
                     viewCreator,

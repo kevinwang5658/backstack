@@ -15,6 +15,9 @@ import android.os.Bundle;
  */
 public class RetainedFragment extends Fragment implements Application.ActivityLifecycleCallbacks{
 
+    /**
+     * Fragment TAG. Hopefully no-one else would name their fragment this.
+     */
     static final String TAG = "BACKSTACK_MANAGER_FRAGMENT";
 
     private Activity activity;

@@ -2,6 +2,7 @@ package com.rievo.android.library;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.os.Bundle;
 
 /**
  * Created by kwang on 2017-09-13.
@@ -20,6 +21,10 @@ public class BackStack {
 
     private static BackStack backStack;
 
+    /**
+     * Installs BackStack into your app. This must be called in {@link Activity#onCreate(Bundle)}
+     * @param activity
+     */
     public static void install(Activity activity){
         //Standard retained fragment code. This creates a new fragment if the fragment couldn't be found
         FragmentManager fm = activity.getFragmentManager();
@@ -47,6 +52,10 @@ public class BackStack {
         return backStack.backStackManager.getLinearBackstack(TAG);
     }
 
+    /**
+     * Retrieves the back stack manager.
+     * @return the back stack manager
+     */
     public static BackStackManager getBackStackManager(){
         return backStack.backStackManager;
     }
@@ -57,7 +66,7 @@ public class BackStack {
 
     private BackStackManager backStackManager;
 
-    BackStack(BackStackManager backStackManager){
+    private BackStack(BackStackManager backStackManager){
         this.backStackManager = backStackManager;
     }
 

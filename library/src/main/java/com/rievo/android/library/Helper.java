@@ -20,7 +20,8 @@ public class Helper {
     public static final String DISABLE = "BACKSTACK_Disable";
 
     /**
-     * Helper function to disable a ViewGroup and all it's children
+     * Helper function to disable a ViewGroup and all it's children. This draws a new view with z-ordering of integer max
+     * that consumes all touch events.
      * @param viewGroup
      */
     public static void disable(ViewGroup viewGroup){
@@ -44,6 +45,10 @@ public class Helper {
         viewGroup.bringChildToFront(view);
     }
 
+    /**
+     * Re-enables a view. This will remove the view added
+     * @param viewGroup
+     */
     public static void enable(ViewGroup viewGroup){
         View view = viewGroup.findViewWithTag(DISABLE);
         if (view != null){
