@@ -45,22 +45,21 @@ Usage is very simple
 
 In the main Activity:
 ~~~~Java
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        BackStackManager.install(this);
-
-
-    }
+    BackStackManager.install(this);
 
 
-    @Override
+}
 
+
+@Override
 public void onBackPressed() {
-        BackStackManager.getBackStackManager().goBack();
-    }
+    BackStackManager.getBackStackManager().goBack();
+}
 ~~~~
 
 And that's all that's needed to configure this library.
@@ -68,11 +67,11 @@ And that's all that's needed to configure this library.
 Inside the root viewgroup:
 
 ~~~~Java
-        LinearBackStack.create(TAG, root, (inflater, container) -> {
-            return new ViewGroup1(inflater.getContext());
-        });
-        //Set the root backstack after you create your first one. This will be the first to receive the back event
-        BackStackManager.setRootBackStack(LinearBackStack.get(TAG));
+LinearBackStack.create(TAG, root, (inflater, container) -> {
+    return new ViewGroup1(inflater.getContext());
+});
+//Set the root backstack after you create your first one. This will be the first to receive the back event
+BackStackManager.setRootBackStack(LinearBackStack.get(TAG));
 ~~~~
 
 This will create a backstack with the container as the root and the view created in the lambda as the first screen. All screens added to this backstack will be swapped (removeView() will be called on the previous view and addView() will be called on the new view) inside the container. The third parameter, the creator, is stored so that the view can be recreated on rotation. Be careful not to capture any variables in the enclosing class, this will memory leak. Java 8 lambda's will not hold a reference to the enclosing class if nothing is captured. An anonymous inner function will not work here and will leak. A static class can also be used if there are parameters for the viewgroup that are needed for recreation. 
@@ -100,12 +99,12 @@ public static class ViewGroupCreator implements LinearBackStack.ViewCreator{
 New screens can be added from anywhere:
 
 ~~~~Java
-    public void newScreen(){
-        LinearBackStack.get(TAG)
-                    .replaceView((inflater, container) -> {
-                        return new ViewGroup1(inflater.getContext());
-                    }).done();
-    }
+public void newScreen(){
+    LinearBackStack.get(TAG)
+                .replaceView((inflater, container) -> {
+                    return new ViewGroup1(inflater.getContext());
+                }).done();
+}
 ~~~~
 
 As you may have noticed by now this entire library is held together by String tags. Each backstack must contain it's own unique tag. This ensures that backstacks are accessable from any location in the app and that new screens can be added from anywhere. Make sure all screens which are added outside of initalization (added at a later time) are done through BackStack so that back navigation will work. Not all views have to be created through BackStack, only the ones that you want to be saved for back navigation. For views that are created together (xml inflation or viewgroups that create other views inside their constructor or pager adapters) only the root view needs to be created through backstack to get back navigation. Also, notice the done() at the end? Don't forget that if you do nothing will be created. And that's it for linear navigation. On back pressed, the previously added view will be swapped in and on rotation the correct screen will be displayed.
@@ -120,44 +119,44 @@ Animations are easy. Before we get started, I highly recommend using android vie
 
 ~~~~Java
 
-    LinearBackStack.get(TAG)
-            .replaceView((inflater, container) -> {
-                return new ViewGroup1(inflater.getContext());
-            })
-            .addAnimation((view1, complete) -> {
-                // Put your animation you want when view is added in here.
-                //Call complete.complete() when it's done. Don't forget this!!!!
-                complete.complete();
-            })
-            .removeAnimation((view1, complete) -> {
-                //Put your remove animation here
-                //Again don't forget!!!
-                complete.complete();
-            })
-            //call done at the end
-            .done();
+LinearBackStack.get(TAG)
+        .replaceView((inflater, container) -> {
+            return new ViewGroup1(inflater.getContext());
+        })
+        .addAnimation((view1, complete) -> {
+            // Put your animation you want when view is added in here.
+            //Call complete.complete() when it's done. Don't forget this!!!!
+            complete.complete();
+        })
+        .removeAnimation((view1, complete) -> {
+            //Put your remove animation here
+            //Again don't forget!!!
+            complete.complete();
+        })
+        //call done at the end
+        .done();
 ~~~~
 
 With Andriod View Animations:
 
 ~~~~Java
-    LinearBackStack.get(MainActivity.TAG)
-            .replaceView((inflater, container) -> {
-                return new ViewGroup2(inflater.getContext());
-            })
-            .addAnimation((view1, complete) -> {
-                YoYo.with(Techniques.SlideInRight)
-                        .duration(500)
-                        .onEnd((a)->complete.complete())
-                        .playOn(view1);
-            })
-            .removeAnimation((view1, complete) -> {
-                YoYo.with(Techniques.SlideOutRight)
-                        .duration(500)
-                        .onEnd((a)->complete.complete())
-                        .playOn(view1);
-            })
-            .done();
+LinearBackStack.get(MainActivity.TAG)
+        .replaceView((inflater, container) -> {
+            return new ViewGroup2(inflater.getContext());
+        })
+        .addAnimation((view1, complete) -> {
+            YoYo.with(Techniques.SlideInRight)
+                    .duration(500)
+                    .onEnd((a)->complete.complete())
+                    .playOn(view1);
+        })
+        .removeAnimation((view1, complete) -> {
+            YoYo.with(Techniques.SlideOutRight)
+                    .duration(500)
+                    .onEnd((a)->complete.complete())
+                    .playOn(view1);
+        })
+        .done();
 ~~~~
 
 ## Combining Cluster BackStacks and Linear Back Stacks
