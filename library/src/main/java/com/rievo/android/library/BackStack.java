@@ -48,8 +48,8 @@ public class BackStack {
         return backStack;
     }
 
-    public static LinearBackStack get(String TAG){
-        return backStack.backStackManager.getLinearBackStack(TAG);
+    public static BStack getStack(String TAG){
+        return backStack.backStackManager.getStack(TAG);
     }
 
     /**

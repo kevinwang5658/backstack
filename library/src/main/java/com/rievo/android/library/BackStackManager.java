@@ -37,6 +37,7 @@ public class BackStackManager {
 
     void onDestroy(){
         backStackMap.clear();
+        activity = null;
     }
 
     /**
@@ -135,8 +136,12 @@ public class BackStackManager {
      * @return if the back event was handled
      */
     public boolean goBack(){
-        backStackMap.get(defaultBackStackTAG).goBack();
-        return true;
+        BStack bStack = backStackMap.get(defaultBackStackTAG);
+        if (bStack != null) {
+            return bStack.goBack();
+        } else {
+            return false;
+        }
     }
 
     //Sets the activity
@@ -150,15 +155,19 @@ public class BackStackManager {
     }
 
     /**
+     * Sets the default backstack. All {@link #goBack()} calls will be directed to this backstack
+     * @param TAG
+     */
+    public void setDefaultBackStack(String TAG){
+        defaultBackStackTAG = TAG;
+    }
+
+    /**
      * Retrieves a linear back stack using the TAG
      * @param TAG The backstack TAG or null if it doesn't exist
      */
-    public LinearBackStack getLinearBackStack(String TAG){
-        return (LinearBackStack) backStackMap.get(TAG);
-    }
-
-    public SplitBackStack getSplitBackStack(String TAG){
-        return (SplitBackStack) backStackMap.get(TAG);
+    public BStack getStack(String TAG){
+        return backStackMap.get(TAG);
     }
 
     public String findTAG(BStack bStack){

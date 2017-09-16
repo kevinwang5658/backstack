@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import java.util.HashMap;
 import java.util.Stack;
 
+import timber.log.Timber;
+
 import static com.rievo.android.library.Helper.disable;
 import static com.rievo.android.library.Helper.enable;
 
@@ -203,7 +205,7 @@ public class LinearBackStack implements BStack{
         s.nodeStack.add(backStackNode);
         currentView = addView(backStackNode);
         if (backStackNode.shouldRetain){
-            addToRetainStack(retainMap.size(), backStackNode, currentView);
+            addToRetainStack(s.nodeStack.size() - 1, backStackNode, currentView);
         }
 
         if (backStackNode.addAnimator != null){
@@ -246,11 +248,13 @@ public class LinearBackStack implements BStack{
             if (!backStackNode.shouldRetain) {
                 currentView = addView(backStackNode);
             } else {
+                Timber.d(retainMap.size() + "");
                 currentView = retainMap.get(s.nodeStack.size() - 1).retainedView;
             }
             enable(currentView);
 
             if (tempNode.removeAnimator != null) {
+                tempView.bringToFront();
                 tempNode.removeAnimator.animate(tempView, ()->{
                     forceRemoveView(s.nodeStack.peek(), tempView);
                 });
