@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:id="@+id/root">
-    <RelativeLayout
+    <ListView
+        android:id="@+id/main_activity_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/topReplace"/>
+        android:entries="@array/activity_main_entries"/>
 </RelativeLayout>

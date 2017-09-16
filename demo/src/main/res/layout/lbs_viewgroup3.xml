@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.rievo.android.backstack.LinearBackStack1.ViewGroup3 xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFFFF">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ViewGroup3"/>
+    <TextView
+        style="@android:style/TextAppearance.Material.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/lbs_vg3_text"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_above="@+id/lbs_vg3_next_screen"/>
+    <Button
+        android:id="@+id/lbs_vg3_next_screen"
+        android:text="Next Screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+</com.rievo.android.backstack.LinearBackStack1.ViewGroup3>

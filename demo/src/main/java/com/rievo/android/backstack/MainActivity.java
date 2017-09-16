@@ -1,18 +1,16 @@
 package com.rievo.android.backstack;
 
+import android.content.Intent;
 import android.rievo.com.backstack.R;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-import com.rievo.android.library.BackStack;
+import com.rievo.android.backstack.LinearBackStack1.LinearBackStackActivity;
+import com.rievo.android.backstack.RealisticDemo.RealisticDemoActivity;
 import com.rievo.android.library.BackStackManager;
-import com.rievo.android.library.ViewCreator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "Simple BackStack";
 
-    @BindView(R.id.topReplace) RelativeLayout topReplace;
+    @BindView(R.id.main_activity_list_view) ListView listView;
 
     BackStackManager backStackManager;
 
@@ -31,17 +29,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-        BackStack.install(this);
-        backStackManager = BackStack.getBackStackManager();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i){
+                    case (0):startActivity(new Intent(MainActivity.this, LinearBackStackActivity.class)); break;
+                    case (1):startActivity(new Intent(MainActivity.this, RealisticDemoActivity.class)); break;
+                }
+            }
+        });
 
-        LayoutInflater.from(this).inflate(R.layout.layout, topReplace, true);
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        if (!backStackManager.goBack()){
-            super.onBackPressed();
-        }
     }
 }

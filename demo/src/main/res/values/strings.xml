@@ -1,3 +1,39 @@
 <resources>
     <string name="app_name">BackStack</string>
+    <string-array name="activity_main_entries">
+        <item>Feature Walk Through</item>
+        <item>View Pager</item>
+    </string-array>
+    <string name="lbs_vg1_text">
+        Press the button below to go to a new screen
+    </string>
+    <string name="lbs_vg2_text">
+        There that was easy! You can press back to return to the previous view. Check out the code to
+        learn how to do that.
+        \n\n
+        Next up is animations. It\'s not really that difficult either. Click the button below to see it in
+        action.
+    </string>
+    <string name="lbs_vg3_text">
+        Saw how it flew in? Press back to see the remove animation.
+        \n\n
+        Next up is state. New view groups can have state passed in through their constructor.
+        For the demo, we\'re going to pass in a random number to the next view group. The passed in
+        value is persisted through rotations.
+    </string>
+    <string name="lbs_vg4_text">
+        Try rotating the screen. You can see that number doesn\'t change even though it was passed
+        in through the view group\'s constructor. Be careful not to capture any references
+        to the activity when using this feature.
+    </string>
+    <string name="lbs_vg5_text">
+        This view is retained. Adding a new view to the back stack won\'t
+        destroy this view. This is useful for expensive view groups that shouldn\'t be recreated.
+    </string>
+    <string name="lbs_vg6_text">
+        The view is translucent so you can see the retained view underneath. This view was also added to a different container.
+    </string>
+    <string name="lbs_vg7_text">
+        Well that\'s it. Press the menu button to return.
+    </string>
 </resources>
