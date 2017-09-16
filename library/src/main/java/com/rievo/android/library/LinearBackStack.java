@@ -62,6 +62,10 @@ public class LinearBackStack implements BStack{
             if (node.shouldRetain){
                 currentView = addView(node);
                 addToRetainStack(i, node, currentView);
+
+                if (i < s.nodeStack.size() - 1){
+                    disable(currentView);
+                }
             }
         }
 
@@ -79,6 +83,10 @@ public class LinearBackStack implements BStack{
         currentView = firstViewGroup;
         if (s.nodeStack.get(0).shouldRetain){
             addToRetainStack(0, s.nodeStack.get(0), currentView);
+
+            if (s.nodeStack.size() > 1){
+                disable(currentView);
+            }
         }
 
         for (int i = 0; i < s.nodeStack.size(); i++){
@@ -86,12 +94,20 @@ public class LinearBackStack implements BStack{
             if (node != s.nodeStack.get(0) && node.shouldRetain){
                 currentView = addView(node);
                 addToRetainStack(i, node, currentView);
+
+                if (i < s.nodeStack.size() - 1){
+                    disable(currentView);
+                }
             }
         }
 
         if (s.nodeStack.size() != 1 && !s.nodeStack.peek().shouldRetain) {
             currentView = addView(s.nodeStack.peek());
         }
+    }
+
+    public void destroy(){
+        ((ViewGroup) container.getParent()).removeView(container);
     }
 
     //*************************

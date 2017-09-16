@@ -2,12 +2,12 @@ package com.rievo.android.library;
 
 import android.app.Activity;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
+import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
 /**
@@ -24,8 +24,9 @@ import timber.log.Timber;
 public class BackStackManager {
 
     private Activity activity;
-    HashMap<String, LinearBackStack> backStackMap = new HashMap<>();
-    HashMap<String, LinearBackStack.State> stateMap = new HashMap<>();
+    private HashMap<String, BStack> backStackMap = new HashMap<>();
+    private HashMap<String, LinearBackStack.State> linearStateMap = new HashMap<>();
+    private HashMap<String, SplitBackStack.State> splitStateMap = new HashMap<>();
     private String defaultBackStackTAG = "";
 
     BackStackManager(Activity activity) {
@@ -52,12 +53,22 @@ public class BackStackManager {
         LinearBackStack linearBackStack = new LinearBackStack(state, container, activity);
         backStackMap.put(TAG, linearBackStack);
         linearBackStack.init();
-
-        if (defaultBackStackTAG.equals("")){
-            defaultBackStackTAG = TAG;
-        }
+        setDefaultBackStackTAG(TAG);
 
         return linearBackStack;
+    }
+
+    public SplitBackStack createSplitBackStack(String TAG, int defaultPosition){
+        SplitBackStack.State state = splitStateMap.get(TAG);
+        if (state == null){
+            state = new SplitBackStack.State(defaultPosition);
+            splitStateMap.put(TAG, state);
+        }
+        SplitBackStack splitBackStack = new SplitBackStack(state);
+        backStackMap.put(TAG, splitBackStack);
+        setDefaultBackStackTAG(TAG);
+
+        return splitBackStack;
     }
 
     /**
@@ -73,11 +84,11 @@ public class BackStackManager {
 
     //Called by the builder to build the backstack
     private LinearBackStack buildLinearBackStack(String TAG, ViewGroup container, ViewGroup currentView, ViewCreator viewCreator, boolean shouldRetain){
-        LinearBackStack.State state = stateMap.get(TAG);
+        LinearBackStack.State state = linearStateMap.get(TAG);
         if (state == null){
             BackStackNode backStackNode = new BackStackNode(viewCreator, container.getId(), shouldRetain);
             state = new LinearBackStack.State(TAG, backStackNode);
-            stateMap.put(TAG, state);
+            linearStateMap.put(TAG, state);
         }
 
         LinearBackStack linearBackStack = new LinearBackStack(state, container, activity);
@@ -90,23 +101,32 @@ public class BackStackManager {
             linearBackStack.initWithoutFirst(currentView);
         }
         backStackMap.put(TAG, linearBackStack);
-        if (defaultBackStackTAG.equals("")){
-            defaultBackStackTAG = TAG;
-        }
+        setDefaultBackStackTAG(TAG);
 
         return linearBackStack;
     }
 
-    //Helper method to retrieve state
+    public void destroy(String TAG){
+        backStackMap.get(TAG).destroy();
+        backStackMap.remove(TAG);
+    }
+
+    //Helper method to retrieve state for linear back stack
     private LinearBackStack.State retrieveOrCreateState(String TAG, ViewCreator firstView){
-        LinearBackStack.State state = stateMap.get(TAG);
+        LinearBackStack.State state = linearStateMap.get(TAG);
         if (state == null){
             BackStackNode backStackNode = new BackStackNode(firstView);
             state = new LinearBackStack.State(TAG, backStackNode);
-            stateMap.put(TAG, state);
+            linearStateMap.put(TAG, state);
         }
 
         return state;
+    }
+
+    private void setDefaultBackStackTAG(String TAG){
+        if (defaultBackStackTAG.equals("")){
+            defaultBackStackTAG = TAG;
+        }
     }
 
     /**
@@ -133,8 +153,22 @@ public class BackStackManager {
      * Retrieves a linear back stack using the TAG
      * @param TAG The backstack TAG or null if it doesn't exist
      */
-    public LinearBackStack getLinearBackstack(String TAG){
-        return backStackMap.get(TAG);
+    public LinearBackStack getLinearBackStack(String TAG){
+        return (LinearBackStack) backStackMap.get(TAG);
+    }
+
+    public SplitBackStack getSplitBackStack(String TAG){
+        return (SplitBackStack) backStackMap.get(TAG);
+    }
+
+    public String findTAG(BStack bStack){
+        for (Map.Entry<String, BStack> entry: backStackMap.entrySet()){
+            if (entry.getValue() == bStack){
+                return entry.getKey();
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -49,7 +49,7 @@ public class BackStack {
     }
 
     public static LinearBackStack get(String TAG){
-        return backStack.backStackManager.getLinearBackstack(TAG);
+        return backStack.backStackManager.getLinearBackStack(TAG);
     }
 
     /**

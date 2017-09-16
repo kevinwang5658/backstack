@@ -8,9 +8,11 @@ package com.rievo.android.library;
  * Interface for BackStacks
  */
 public interface BStack {
+
     /**
      * Go back function
      * @return true if goBack was successful
      */
     boolean goBack();
+    void destroy();
 }
