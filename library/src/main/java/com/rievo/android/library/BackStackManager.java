@@ -258,6 +258,10 @@ public class BackStackManager {
                 container = (ViewGroup) currentViewGroup.getParent();
             }
 
+            if (container == null){
+                throw new RuntimeException("Container must be set");
+            }
+
             if (container.getId() == -1){
                 throw new RuntimeException("Container must have id set");
             }
