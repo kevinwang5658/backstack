@@ -258,6 +258,10 @@ public class BackStackManager {
                 container = (ViewGroup) currentViewGroup.getParent();
             }
 
+            if (container.getId() == -1){
+                throw new RuntimeException("Container must have id set");
+            }
+
             return backStackManager.buildLinearBackStack(TAG, container, currentViewGroup, creator, shouldRetain);
         }
     }
