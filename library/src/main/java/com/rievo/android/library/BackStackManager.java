@@ -2,9 +2,7 @@ package com.rievo.android.library;
 
 import android.app.Activity;
 import android.view.ViewGroup;
-import android.widget.Spinner;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +25,7 @@ public class BackStackManager {
     private HashMap<String, BStack> backStackMap = new HashMap<>();
     private HashMap<String, LinearBackStack.State> linearStateMap = new HashMap<>();
     private HashMap<String, SplitBackStack.State> splitStateMap = new HashMap<>();
-    private String defaultBackStackTAG = "";
+    private String rootBackStackTAG = "";
 
     BackStackManager(Activity activity) {
         this.activity = activity;
@@ -54,7 +52,7 @@ public class BackStackManager {
         LinearBackStack linearBackStack = new LinearBackStack(state, container, activity);
         backStackMap.put(TAG, linearBackStack);
         linearBackStack.init();
-        setDefaultBackStackTAG(TAG);
+        setRootBackStackTAG(TAG);
 
         return linearBackStack;
     }
@@ -67,7 +65,7 @@ public class BackStackManager {
         }
         SplitBackStack splitBackStack = new SplitBackStack(state);
         backStackMap.put(TAG, splitBackStack);
-        setDefaultBackStackTAG(TAG);
+        setRootBackStackTAG(TAG);
 
         return splitBackStack;
     }
@@ -102,7 +100,7 @@ public class BackStackManager {
             linearBackStack.initWithoutFirst(currentView);
         }
         backStackMap.put(TAG, linearBackStack);
-        setDefaultBackStackTAG(TAG);
+        setRootBackStackTAG(TAG);
 
         return linearBackStack;
     }
@@ -124,9 +122,9 @@ public class BackStackManager {
         return state;
     }
 
-    private void setDefaultBackStackTAG(String TAG){
-        if (defaultBackStackTAG.equals("")){
-            defaultBackStackTAG = TAG;
+    private void setRootBackStackTAG(String TAG){
+        if (rootBackStackTAG.equals("")){
+            rootBackStackTAG = TAG;
         }
     }
 
@@ -136,7 +134,7 @@ public class BackStackManager {
      * @return if the back event was handled
      */
     public boolean goBack(){
-        BStack bStack = backStackMap.get(defaultBackStackTAG);
+        BStack bStack = backStackMap.get(rootBackStackTAG);
         if (bStack != null) {
             return bStack.goBack();
         } else {
@@ -158,8 +156,8 @@ public class BackStackManager {
      * Sets the default backstack. All {@link #goBack()} calls will be directed to this backstack
      * @param TAG
      */
-    public void setDefaultBackStack(String TAG){
-        defaultBackStackTAG = TAG;
+    public void setRootBackStack(String TAG){
+        rootBackStackTAG = TAG;
     }
 
     /**
