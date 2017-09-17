@@ -209,8 +209,11 @@ public class LinearBackStack implements BStack{
         }
 
         if (backStackNode.addAnimator != null){
-            backStackNode.addAnimator.animate(currentView, ()->{
-                removeView(tempNode, tempView);
+            backStackNode.addAnimator.animate(currentView, new Emitter() {
+                @Override
+                public void done() {
+                    removeView(tempNode, tempView);
+                }
             });
         } else {
             removeView(tempNode, tempView);
@@ -255,8 +258,11 @@ public class LinearBackStack implements BStack{
 
             if (tempNode.removeAnimator != null) {
                 tempView.bringToFront();
-                tempNode.removeAnimator.animate(tempView, ()->{
-                    forceRemoveView(s.nodeStack.peek(), tempView);
+                tempNode.removeAnimator.animate(tempView, new Emitter() {
+                    @Override
+                    public void done() {
+                        forceRemoveView(s.nodeStack.peek(), tempView);
+                    }
                 });
             } else {
                 forceRemoveView(s.nodeStack.peek(), tempView);
