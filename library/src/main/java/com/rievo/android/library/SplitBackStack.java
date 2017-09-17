@@ -28,7 +28,6 @@ public class SplitBackStack implements BStack {
     }
 
     public void add(int position, BStack bStack){
-        Timber.d("add position: " + position);
         stackMap.put(position, bStack);
     }
 
@@ -39,11 +38,10 @@ public class SplitBackStack implements BStack {
     }
 
     public void changePosition(int position){
-        Timber.d("change position: " + position);
         s.position = position;
     }
 
-    public int getPosition(int position){
+    public int getPosition(){
         return s.position;
     }
 
