@@ -274,6 +274,14 @@ public class LinearBackStack implements BStack{
         }
     }
 
+    /**
+     * Returns the size of the back stack
+     * @return size
+     */
+    public int getSize(){
+        return s.nodeStack.size();
+    }
+
     //Holds view information for all retained views
     static class RetainHolder {
         ViewGroup container;
