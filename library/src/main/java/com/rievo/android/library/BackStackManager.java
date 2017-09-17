@@ -77,7 +77,7 @@ public class BackStackManager {
      * @param TAG Unique tag to reference back stack
      * @return the created backstack
      */
-    public LinearBackStackBuilder linearBackStackBuilder(String TAG){
+    public LinearBackStackBuilder builder(String TAG){
         return new LinearBackStackBuilder(this, TAG);
     }
 
