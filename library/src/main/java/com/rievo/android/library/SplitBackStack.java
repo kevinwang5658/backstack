@@ -20,20 +20,20 @@ public class SplitBackStack implements BStack {
         }
     }
 
-    private HashMap<Integer, BStack> stackMap = new HashMap<>();
+    private HashMap<Integer, String> stackMap = new HashMap<>();
     private State s;
 
     SplitBackStack(State s){
         this.s = s;
     }
 
-    public void add(int position, BStack bStack){
-        stackMap.put(position, bStack);
+    public void add(int position, String TAG){
+        stackMap.put(position, TAG);
     }
 
     public void remove(int position){
         BackStackManager manager = BackStack.getBackStackManager();
-        manager.destroy(manager.findTAG(stackMap.get(position)));
+        manager.destroy(stackMap.get(position));
         stackMap.remove(position);
     }
 
@@ -47,7 +47,7 @@ public class SplitBackStack implements BStack {
 
     @Override
     public boolean goBack() {
-        BStack bStack = stackMap.get(s.position);
+        BStack bStack = BackStack.getStack(stackMap.get(s.position));
         if(bStack != null) {
             return bStack.goBack();
         } else {
