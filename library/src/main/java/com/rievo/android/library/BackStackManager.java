@@ -98,6 +98,7 @@ public class BackStackManager {
      */
     public static void setRootBackStack(Reversible backStack){
         rootBackStack = backStack;
+        ////
     }
 
     /**
