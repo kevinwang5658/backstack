@@ -50,6 +50,14 @@ public class RetainedFragment extends Fragment implements Application.ActivityLi
         return backStackManager;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.activity = null;
+        BackStack.getSelf().onDestroy();
+        backStackManager.onDestroy();
+    }
+
     //**********************
     // Activity Lifecycle
     //**********************
