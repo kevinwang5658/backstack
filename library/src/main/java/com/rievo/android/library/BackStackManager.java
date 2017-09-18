@@ -31,6 +31,7 @@ public class BackStackManager {
         this.activity = activity;
 
         Timber.d("New BackStackManager");
+        
     }
 
     void onDestroy(){
@@ -88,7 +89,7 @@ public class BackStackManager {
             BackStackNode backStackNode = new BackStackNode(viewCreator, container.getId(), shouldRetain);
             state = new LinearBackStack.State(TAG, backStackNode);
             linearStateMap.put(TAG, state);
-            
+
         }
 
         LinearBackStack linearBackStack = new LinearBackStack(state, container, activity);
