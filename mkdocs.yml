@@ -1,0 +1,7 @@
+site_name: BackStack
+theme_dir: cinder
+pages:
+  - Home: 'index.md'
+  - User Guide:
+    - 'Linear Back Stack': 'linear.md'
+    - 'Split Back Stack': 'split.md'
