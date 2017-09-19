@@ -82,11 +82,12 @@ public class BackStackManager {
     }
 
     //Called by the builder to build the backstack
-    private LinearBackStack buildLinearBackStack(String TAG, ViewGroup container, ViewGroup currentView, ViewCreator viewCreator, boolean shouldRetain){
+    private LinearBackStack buildLinearBackStack(String TAG, ViewGroup container, ViewGroup currentView, ViewCreator viewCreator, boolean shouldRetain, boolean allowDuplicates){
         LinearBackStack.State state = linearStateMap.get(TAG);
         if (state == null){
             BackStackNode backStackNode = new BackStackNode(viewCreator, container.getId(), shouldRetain);
             state = new LinearBackStack.State(TAG, backStackNode);
+            state.allowDuplicates = allowDuplicates;
             linearStateMap.put(TAG, state);
         }
 
@@ -189,6 +190,7 @@ public class BackStackManager {
         ViewCreator creator;
         ViewGroup currentViewGroup;
         ViewGroup container;
+        boolean allowDuplicates = true;
         boolean shouldRetain = false;
 
         private LinearBackStackBuilder(BackStackManager backStackManager, String TAG){
@@ -237,6 +239,11 @@ public class BackStackManager {
             return this;
         }
 
+        public LinearBackStackBuilder shouldAllowDuplicates(boolean allowDuplicates){
+            this.allowDuplicates = allowDuplicates;
+            return this;
+        }
+
         /**
          * Creates the new back stack
          * @return
@@ -266,7 +273,7 @@ public class BackStackManager {
                 throw new RuntimeException("Container must have id set");
             }
 
-            return backStackManager.buildLinearBackStack(TAG, container, currentViewGroup, creator, shouldRetain);
+            return backStackManager.buildLinearBackStack(TAG, container, currentViewGroup, creator, shouldRetain, allowDuplicates);
         }
     }
 }
