@@ -26,6 +26,7 @@ public class LinearBackStack implements BStack{
      */
     static final class State{
         public final String TAG;
+        public boolean allowDuplicates = true;
         Stack<BackStackNode> nodeStack = new Stack<>();
 
         State(String TAG, BackStackNode defaultNode){
@@ -154,6 +155,10 @@ public class LinearBackStack implements BStack{
         parent.removeView(viewGroup);
     }
 
+    private boolean checkForDuplicates(ViewCreator viewCreator){
+        return s.nodeStack.search(viewCreator) != -1;
+    }
+
     //**************************
     // Public Functions
     //**************************
@@ -164,6 +169,10 @@ public class LinearBackStack implements BStack{
      * @param viewCreator The view creator for the new view
      */
     public void add(ViewCreator viewCreator){
+        if (!s.allowDuplicates && checkForDuplicates(viewCreator)){
+            return;
+        }
+
         BackStackNode backStackNode = new BackStackNode(viewCreator);
         final ViewGroup tempView = currentView;
         final BackStackNode tempNode = s.nodeStack.peek();
@@ -185,8 +194,11 @@ public class LinearBackStack implements BStack{
         if (container.getId() == -1){
             throw new RuntimeException("Container must have an id set");
         }
-        BackStackNode backStackNode = new BackStackNode(viewCreator, container.getId());
+        if (!s.allowDuplicates && checkForDuplicates(viewCreator)){
+            return;
+        }
 
+        BackStackNode backStackNode = new BackStackNode(viewCreator, container.getId());
         final ViewGroup tempView = currentView;
         final BackStackNode tempNode = s.nodeStack.peek();
 
@@ -198,6 +210,10 @@ public class LinearBackStack implements BStack{
 
     //Called by the builder. This is the full option add.
     private void build(final BackStackNode backStackNode){
+        if (!s.allowDuplicates && checkForDuplicates(backStackNode.viewCreator)){
+            return;
+        }
+
         final ViewGroup tempView = currentView;
         final BackStackNode tempNode = s.nodeStack.peek();
 
@@ -280,6 +296,14 @@ public class LinearBackStack implements BStack{
      */
     public int getSize(){
         return s.nodeStack.size();
+    }
+
+    /**
+     * Sets if duplicates are allowed
+     * @param allowDuplicates
+     */
+    public void setAllowDuplicates(boolean allowDuplicates){
+        s.allowDuplicates = allowDuplicates;
     }
 
     //Holds view information for all retained views
