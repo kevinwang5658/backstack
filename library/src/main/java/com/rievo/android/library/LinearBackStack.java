@@ -156,7 +156,12 @@ public class LinearBackStack implements BStack{
     }
 
     private boolean checkForDuplicates(ViewCreator viewCreator){
-        return s.nodeStack.search(viewCreator) != -1;
+        for (BackStackNode node: s.nodeStack){
+            if (node.viewCreator.equals(viewCreator)){
+                return true;
+            }
+        }
+        return false;
     }
 
     //**************************
