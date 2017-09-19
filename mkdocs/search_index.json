@@ -1,0 +1,34 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "BackStack\n\n\nBack Stack is a light Android library that implements back navigation for view groups. Along with that\nit also",
+            "title": "Home"
+        },
+        {
+            "location": "/#backstack",
+            "text": "Back Stack is a light Android library that implements back navigation for view groups. Along with that\nit also",
+            "title": "BackStack"
+        },
+        {
+            "location": "/linear/",
+            "text": "Linear Back Stack\n\n\njjj",
+            "title": "Linear Back Stack"
+        },
+        {
+            "location": "/linear/#linear-back-stack",
+            "text": "jjj",
+            "title": "Linear Back Stack"
+        },
+        {
+            "location": "/split/",
+            "text": "Split Back Stack\n\n\njjj",
+            "title": "Split Back Stack"
+        },
+        {
+            "location": "/split/#split-back-stack",
+            "text": "jjj",
+            "title": "Split Back Stack"
+        }
+    ]
+}
