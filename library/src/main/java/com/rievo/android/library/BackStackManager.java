@@ -159,7 +159,9 @@ public class BackStackManager {
      * @param TAG
      */
     public void setRootBackStack(String TAG){
-        rootBackStackTAG = TAG;
+        if (rootBackStackTAG.equals("")) {
+            rootBackStackTAG = TAG;
+        }
     }
 
     /**
