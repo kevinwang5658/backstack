@@ -45,6 +45,14 @@ public class SplitBackStack implements BStack {
         return s.position;
     }
 
+    public int getSize(){
+        return stackMap.size();
+    }
+
+    public String getTAG(int position){
+        return stackMap.get(position);
+    }
+
     @Override
     public boolean goBack() {
         BStack bStack = BackStack.getStack(stackMap.get(s.position));
