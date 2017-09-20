@@ -3,11 +3,11 @@ package com.rievo.backstack.LinearBackStack1;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.rievo.com.backstack.R;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 import com.rievo.backstack.MainActivity;
+import com.rievo.backstack.R;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

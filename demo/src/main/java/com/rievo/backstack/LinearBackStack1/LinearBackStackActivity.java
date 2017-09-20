@@ -1,12 +1,12 @@
 package com.rievo.backstack.LinearBackStack1;
 
 import android.os.Bundle;
-import android.rievo.com.backstack.R;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
 import com.rievo.library.BackStackManager;
 

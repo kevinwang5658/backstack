@@ -1,12 +1,12 @@
 package com.rievo.backstack.LinearBackStack1;
 
 import android.content.Context;
-import android.rievo.com.backstack.R;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
 import com.rievo.library.LinearBackStack;
 import com.rievo.library.ViewCreator;

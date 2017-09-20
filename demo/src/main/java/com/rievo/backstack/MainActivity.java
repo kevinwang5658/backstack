@@ -1,7 +1,6 @@
 package com.rievo.backstack;
 
 import android.content.Intent;
-import android.rievo.com.backstack.R;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;

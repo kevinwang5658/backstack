@@ -1,7 +1,6 @@
 package com.rievo.backstack;
 
 import android.app.Application;
-import android.rievo.com.backstack.BuildConfig;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
