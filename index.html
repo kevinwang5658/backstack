@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        
+        <link rel="shortcut icon" href="./img/favicon.ico">
+        <title>BackStack</title>
+        <link href="./css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="./css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="./css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="./css/highlight.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+	
+	<script src="./js/jquery-1.10.2.min.js"></script>
+        <script src="./js/bootstrap-3.0.3.min.js"></script>
+        <script src="./js/highlight.pack.js"></script> 
+    </head>
+
+    <body class="homepage">
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href=".">BackStack</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href=".">Home</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="getting_started/">Getting Started</a>
+</li>
+                            
+<li >
+    <a href="linear_back_stack/">Linear Back Stack</a>
+</li>
+                            
+<li >
+    <a href="split_back_stack/">Split Back Stack</a>
+</li>
+                            
+<li >
+    <a href="view_creator/">View Creators</a>
+</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="license/">License</a>
+</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li class="disabled">
+                        <a rel="next" >
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="getting_started/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#backstack">BackStack</a></li>
+            <li><a href="#philosophy">Philosophy</a></li>
+            <li><a href="#using-backstack">Using BackStack</a></li>
+            <li><a href="#getting-backstack">Getting BackStack</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="backstack">BackStack</h1>
+<p>BackStack is a light weight back stack library for view based navigation on Android. Using BackStack provides an easy way to switch between view groups without having to worry about back navigation. A navigation tree built by BackStack will also be persisted through rotation and activity restarts. BackStack works with linear navigation flows as well as split flows like bottom bars and view pagers.</p>
+<h2 id="philosophy">Philosophy</h2>
+<h4 id="history">History</h4>
+<p>The navigation style that BackStack uses is view group based navigation. This means that instead of using Activities and Fragments to provide different screens, a light-weight ViewGroup is used instead. Over the years, there have been many discussions on this subject. If you want to go through it, a summary of the history can be found <a href="https://academy.realm.io/posts/michael-yotive-state-of-fragments-2017/?">here</a>.</p>
+<p>Google officially recommends the use of fragments. However, people in the android community, myself included, find that fragments are large bloated objects that obscures a lot it's functionality behind layers of code. There have also been problem reported weird memory leaks and problems with the asynchronous nature of fragment transactions. The consensus in the community is that people generally don't like using fragments.</p>
+<p>In 2014 square began a movement,  <a href="https://medium.com/square-corner-blog/advocating-against-android-fragments-81fd0b462c97">here</a>, to use view groups in place of fragments. They argued that view groups are light weight containers that adhere to the Android lifecycle, something that seems perfect to use as a container for a screen. View groups, however have their own limitations. Mainly that, they don't inherently come back navigation and persistence through rotations. This is where BackStack comes in.</p>
+<h4 id="backstack_1">BackStack</h4>
+<p>BackStack is view group based back navigation library. It aims to overcome the limitations of view groups and make them a viable choice for use in-place of fragments or activities. BackStack is built around the concept of a view creator, a contextless object that does what it's name says, creates views. Each view creator is associated with a particular view group. View creators don't hold state about what they create or who told them to create what. By doing this, each view group can be inflated independent of each other regardless of the order or conditions they were first created in. BackStack stores a stack of view creators in chronological order. The view creator at the top of the stack will inflate the view that is actually shown to the user. Using this stack, BackStack can return to any previous views. View creators are contextless, and therefore they can also be persisted through activity restarts without leaking.</p>
+<h2 id="using-backstack">Using BackStack</h2>
+<pre><code class="Java">public static class MyViewCreator implements ViewCreator{
+    @Override
+    public ViewGroup create(LayoutInflater layoutInflater, ViewGroup container) {
+        CustomViewGroup vg = new CustomViewGroup(layoutInflater.getContext());
+        container.addView(vg);
+        return vg;
+    }
+}
+...
+
+public void foo(){
+    linearBackStack.add(new MyViewCreator());
+}
+</code></pre>
+
+<p>View creators are very simple to make. They are simply classes that implement the ViewCreator interface. All view creators must adhere to 2 rules. First, by the end of the create function the inflated view group must be added to the parent container, sort of like in a ListView . Secondly, the class must not capture any references to the Android context. This means that only regular classes, static inner classes and lambdas that don't explicitly capture are eligible to be view creators; anonymous inner classes can't be used because they implicitly capture. This is done so that the view creator doesn't leak when it's persisted.</p>
+<pre><code class="Java">linearBackStack.add((layoutInflater, container) -&gt; {
+     CustomViewGroup vg = new CustomViewGroup(layoutInflater.getContext());
+     container.addView(vg);
+     return vg;
+ });
+</code></pre>
+
+<p>When using this library, it is highly recommended that you <a href="https://developer.android.com/studio/write/java8-support.html">enable Java 8 language features</a>. This allows you to use lambdas which greatly simplifies the code and improves the readability.</p>
+<p>For more information please visit the <a href="getting_started/">documentation</a>.</p>
+<h2 id="getting-backstack">Getting BackStack</h2>
+<p>Using Gradle:</p>
+<p>build.gradle (Project)</p>
+<pre><code class="Gradle">allprojects {
+    repositories {
+        jcenter()
+        maven{
+            url 'https://jitpack.io'
+        }
+    }
+}
+</code></pre>
+
+<p>build.gradle (Module)</p>
+<pre><code class="Gradle">dependencies {
+    compile 'com.github.kevinwang5658:backstack:v2.2'
+}
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '.';</script>
+        <script data-main="./mkdocs/js/search.js" src="./mkdocs/js/require.js"></script>
+        <script src="./js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 0.16.3
+Build Date UTC : 2017-09-20 21:31:00
+-->

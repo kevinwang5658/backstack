@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Getting Started - BackStack</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+	
+	<script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="..">BackStack</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li class="active">
+    <a href="./">Getting Started</a>
+</li>
+                            
+<li >
+    <a href="../linear_back_stack/">Linear Back Stack</a>
+</li>
+                            
+<li >
+    <a href="../split_back_stack/">Split Back Stack</a>
+</li>
+                            
+<li >
+    <a href="../view_creator/">View Creators</a>
+</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../license/">License</a>
+</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li >
+                        <a rel="next" href="..">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../linear_back_stack/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#getting-started">Getting Started</a></li>
+            <li><a href="#adding-backstack">Adding BackStack</a></li>
+            <li><a href="#initialization">Initialization</a></li>
+            <li><a href="#creating-a-simple-back-stack">Creating a Simple Back Stack</a></li>
+            <li><a href="#adding-subsequent-view-groups">Adding Subsequent View Groups</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="getting-started">Getting Started</h1>
+<h2 id="adding-backstack">Adding BackStack</h2>
+<p>Using gradle:</p>
+<p>build.gradle (Project)</p>
+<pre><code class="Gradle">allprojects{
+    repositories{
+        jcenter()
+        maven{
+            url 'https://jitpack.io'
+        }
+    }
+}
+</code></pre>
+
+<p>build.gradle (Module)</p>
+<pre><code class="Gradle">dependencies{
+    compile 'com.github.kevinwang5658:backstack:651d673'
+}
+</code></pre>
+
+<h2 id="initialization">Initialization</h2>
+<p>To initialize BackStack simply add the following code in onCreate().</p>
+<pre><code class="Java">public class MainActivity extends AppCompatActivity {
+
+    BackStackManager backStackManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        ...
+
+        BackStack.install(this);
+        backStackManager = BackStack.getBackStackManager();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!backStackManager.goBack()) {
+            super.onBackPressed();
+        }
+    }
+}
+</code></pre>
+
+<h2 id="creating-a-simple-back-stack">Creating a Simple Back Stack</h2>
+<p>To begin we're going to focus on getting a linear back stack up and running. Linear back stacks are the main back stacks of this library. They are responsible for linear navigation flow <code>screenA -&gt; screenB -&gt; screenC</code>. Linear back stacks will automatically implement back navigation and view hierarchy persistence.</p>
+<p>Let's start shall we?</p>
+<pre><code class="Java">public static final String TAG = &quot;TAG&quot;;
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    BackStack.install(this);
+    backStackManager = BackStack.getBackStackManager();
+
+    //This is the container you want to be the root of your back stack
+    root = findViewById(R.id.root);
+
+    LinearBackStack linearBackStack = backStackManager.createLinearBackStack(&quot;TAG&quot;, root, (layoutInflater, container) -&gt; {
+        //This is our first view group in the stack
+        CustomViewGroup cvg = new CustomViewGroup(layoutInflater.getContext());
+
+        //Make sure that the view is added to container by the end of this block
+        container.addView(cvg);
+
+        //Return the view group that was newly inflated
+        return cvg;
+    });
+}
+</code></pre>
+
+<p>Let's make a view group called CustomViewGroup.</p>
+<pre><code class="Java">public class CustomViewGroup extends RelativeLayout{
+    public CustomViewGroup(Context context) {
+        super(context);
+
+        //Let's set the background color so that we know
+        //that the view group has been added
+        setBackgroundColor(Color.GRAY);
+
+        //Let's inflate an xml file with the children of this view group
+        LayoutInflater.from(context).inflate(R.layout.custom_view_group, this, true);
+    }
+}
+</code></pre>
+
+<p>And that's it. If you run this, you should see a gray screen instead of the default white. The first view group has been added to your stack.</p>
+<h2 id="adding-subsequent-view-groups">Adding Subsequent View Groups</h2>
+<p>Now let's say that this gray screen is the home of our app, and that when we click on something we want to change to the next screen. Let's simulate this by setting an onClick listener on the entire screen.</p>
+<pre><code class="Java">public class CustomViewGroup extends RelativeLayout{
+    public CustomViewGroup(Context context) {
+        super(context);
+
+        //Let's set the background color so that we know
+        //that the view group has been added
+        setBackgroundColor(Color.GRAY);
+
+        //Let's inflate an xml file with the children of this view group
+        LayoutInflater.from(context).inflate(R.layout.custom_view_group, this, true);
+
+        setOnClickListener(v -&gt; {
+
+        });
+
+    }
+}
+</code></pre>
+
+<p>This time let's inflate the view through xml as well just to change things up. So let's first create an xml layout file called added_view.xml</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;com.rievo.test.AddedViewGroup xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:background=&quot;@android:color/white&quot;&gt;
+    &lt;!-- Let's set the background color to white so that we can see a change--&gt;
+&lt;/com.rievo.test.AddedViewGroup&gt;
+</code></pre>
+
+<p>Let's change our on click listener</p>
+<pre><code class="Java">setOnClickListener(v -&gt; {
+    //All back stacks can be retrieved anywhere using their tag
+    LinearBackStack linearBackStack = (LinearBackStack) BackStack.getStack(MainActivity.TAG);
+    linearBackStack.add((layoutInflater, container) -&gt; {
+        //if attach to root is true layoutInflater.inflate() returns the container instead
+        ViewGroup viewGroup = (ViewGroup) layoutInflater
+                .inflate(R.layout.added_view, container, false);
+        container.addView(viewGroup);
+        return viewGroup;
+    });
+});
+</code></pre>
+
+<p>Now let's try it. Clicking on the screen should change the screen color to white. Let's say this represents an info page or something. If you rotate your device you'll see that the screen remains white, this means that navigation stack was persisted. Pressing back should lead you back to the home screen. For more advanced usage of this library please proceed to the <a href="../linear_back_stack/">next section</a>.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '..';</script>
+        <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
+        <script src="../js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

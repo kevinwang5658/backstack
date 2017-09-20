@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Linear Back Stack - BackStack</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+	
+	<script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="..">BackStack</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../getting_started/">Getting Started</a>
+</li>
+                            
+<li class="active">
+    <a href="./">Linear Back Stack</a>
+</li>
+                            
+<li >
+    <a href="../split_back_stack/">Split Back Stack</a>
+</li>
+                            
+<li >
+    <a href="../view_creator/">View Creators</a>
+</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../license/">License</a>
+</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li >
+                        <a rel="next" href="../getting_started/">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../split_back_stack/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#linear-back-stack">Linear Back Stack</a></li>
+            <li><a href="#initialization">Initialization</a></li>
+            <li><a href="#adding-subsequent-views">Adding Subsequent Views</a></li>
+            <li><a href="#handling-onback-events-yourself">Handling onBack Events Yourself</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="linear-back-stack">Linear Back Stack</h1>
+<p>Linear back stacks are the core of BackStack. They are responsible for linear navigation flow <code>screenA -&gt; screenB -&gt; screen C</code>. Linear back stacks have a root container view which it adds all view groups to. Under default behavior, linear back stacks will replace the previous view each time a new view is added, though this can be changed.</p>
+<h2 id="initialization">Initialization</h2>
+<p>Linear back stacks can be initialized in two ways. The first way is to use <code>BackStackManager#createLinearBackStack(String, ViewGroup, ViewCreator)</code>. This will initialize a linear back stack with a tag String, parent container ViewGroup and the ViewCreator for the first screen. All back stacks are associated with a unique tag. This facilitates access from anywhere in the code. Another way of initializing a linear back stack is to use a builder. This provides a lot more options on the configuration. To get the builder, call <code>BackStackManager#builder(String)</code>.</p>
+<p>The options for the builder include:</p>
+<p><code>setContainer(ViewGroup)</code>: Sets the parent container</p>
+<p><code>useCurrentViewGroup(ViewGroup)</code>: Use the current view group as the first view and deduce the parent container view. This shouldn't be used alongside <code>setContainer(ViewGroup)</code></p>
+<p><code>setRetain(boolean)</code>: Sets the retain mode of the first view. Retained views won't be destroyed when more views are added, useful for expensive view groups.</p>
+<p><code>shouldAllowDuplicates(boolean)</code>: Sets whether duplicate view creators should be allowed. View creator equality is determined by the equals function of each view creator. Make sure that is implemented properly for this to work.</p>
+<p><code>viewCreator(ViewCreator)</code>: The view creator of the first view group on the stack. This must be set.</p>
+<pre><code class="Java">backStackManager.createLinearBackStack(TAG, container, (layoutInflater, container) -&gt; {
+    return null;
+});
+
+backStackManager.builder(TAG)
+        .setContainer(container)
+        //You shouldn't use both setContainer and useCurrentViewGroup at the same time
+        .useCurrentViewGroup(container)
+        .shouldAllowDuplicates(false)
+        .shouldRetain(false)
+        .viewCreator((layoutInflater, container) -&gt;{
+            return null;
+        }).build();
+</code></pre>
+
+<h2 id="adding-subsequent-views">Adding Subsequent Views</h2>
+<p>From anywhere in the app, all linear back stacks are accessible using <code>BackStack#getStack(TAG)</code>. After retrieval, linear back stacks have three options for adding new views, two overloaded methods and a builder.</p>
+<p>The easiest way to add a view is to use <code>LinearBackStack#add(ViewCreator)</code>. This will push a view creator onto the stack and use it to inflate the view group. You can also specify a unique container to add the new view group using <code>LinearBackStack#add(ViewCreator, ViewGroup)</code>. The container must be on the same branch of and equal or lower down on the view hierarchy than the default container (it must be a parent of the default container or the default container itself). There is also a builder which provides the most options. To access the builder use <code>LinearBackStack#Builder(ViewCreator)</code>.</p>
+<p>The options for the builder include:</p>
+<p><code>setRetain(boolean)</code>: Sets the retain mode of the newly added view. Retained views won't be destroyed when more views are added, useful for expensive view groups.</p>
+<p><code>setContainer(ViewGroup)</code>: Sets a custom container to add the view group in. The container must be on the same branch of and equal or lower down on the hierarchy than the default parent view group.</p>
+<p><code>addAnimator(Animator)</code>: Sets the add animator. This will be called when new views are added. The <code>Animator#animate(ViewGroup, Emitter)</code> method has two parameters: view, the view to play the animation on and emitter, something you have call when the animation ends.</p>
+<p><code>removeAnimator(Animator)</code>: Sets the remove animator. This animator is called when back is pressed and a view is removed. The rules are the same as the addAnimator.</p>
+<pre><code class="Java">LinearBackStack linearBackStack = (LinearBackStack) BackStack.getStack(TAG);
+
+linearBackStack.add((layoutInflater, viewGroup) -&gt; {
+    return null;
+});
+
+linearBackStack.add((layoutInflater, viewGroup) -&gt; {
+    return null;
+}, container);
+
+linearBackStack.builder((layoutInflater, viewGroup) -&gt; {
+    return null;
+})
+        .setRetain(true)
+        .setContainer(container)
+        .addAnimator((viewGroup, emitter) -&gt; {
+            emitter.done();
+        })
+        .removeAnimator((viewGroup, emitter) -&gt; {
+            emitter.done();
+        })
+        .build();
+</code></pre>
+
+<h2 id="handling-onback-events-yourself">Handling onBack Events Yourself</h2>
+<p>To handle onBack events yourself, implement the Reversible interface in the view group that you want to handle the call with. When that view group is about to be removed from the stack because of a onBack call, the <code>Reversible#onBack</code> will be called to give the view a chance to handle the call. Returning true from this method means that you have handled the call and that BackStack doesn't need to do anything. Returning false means that you want BackStack to still handle the back event.</p>
+<pre><code class="Java">public class ViewGroup1 extends RelativeLayout implements Reversible{
+    public ViewGroup1(Context context) {
+        super(context);
+    }
+
+    @Override
+    public boolean onBack() {
+        return false;
+    }
+}
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '..';</script>
+        <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
+        <script src="../js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

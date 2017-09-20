@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Split Back Stack - BackStack</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+	
+	<script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="..">BackStack</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../getting_started/">Getting Started</a>
+</li>
+                            
+<li >
+    <a href="../linear_back_stack/">Linear Back Stack</a>
+</li>
+                            
+<li class="active">
+    <a href="./">Split Back Stack</a>
+</li>
+                            
+<li >
+    <a href="../view_creator/">View Creators</a>
+</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            
+<li >
+    <a href="../license/">License</a>
+</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                    <li >
+                        <a rel="next" href="../linear_back_stack/">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../view_creator/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#split-back-stack">Split Back Stack</a></li>
+            <li><a href="#basic-usage">Basic Usage</a></li>
+            <li><a href="#examples">Examples</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="split-back-stack">Split Back Stack</h1>
+<p>Split back stacks are responsible for distributing back events to the correct linear back stack in split navigation flows like bottom bars and view pagers. Currently the way that BackStack handles split navigation flows is that each tab will have it's own separate back stack. This means that in a given tab, pressing back will only give you the previous view in the same tab. We might add multiple tab back stacks in the future.</p>
+<p>A split back stack isn't a real back stack. It doesn't hold view creators and can't inflate views. This is left to be the responsibility of the developer to implement since it varies greatly between different containers (bottom bars are way different to view pagers). A split back stack simply delegates back events to the correct linear back stack to handle the touch event.</p>
+<h2 id="basic-usage">Basic Usage</h2>
+<p>Split back stacks are created similarly to linear back stacks. Use <code>BackStackManager#createSplitBackStack(String, int)</code>. The string is the unique tag associated with the split back stack. The int is the default position of the back stack.</p>
+<p>Split back stacks don't store view creators, instead they store TAGs that are associated with the linear back stacks within them. To add a new linearBackStack use <code>SplitBackStack#add(int, String)</code>. The int is the position of the linear back stack within the split back stack and the String is the TAG associated with it.</p>
+<pre><code class="Java">SplitBackStack splitBackStack = backStackManager.createSplitBackStack(SPLIT_TAG, 0);
+
+splitBackStack.add(position, tag);
+</code></pre>
+
+<h2 id="examples">Examples</h2>
+<h4 id="view-pagers">View Pagers</h4>
+<p>To use a split back stack with a view pager, you have to add a unique linear back stack in <code>PagerAdapter#instantiateItem(ViewGroup, int)</code>. This method comes with a container and it may be tempting to use this container as the root container of the linear back stack but this won't work properly. View pagers don't like it when views are added or removed from the container independent of the adapter. To remedy this, we need to add an extra view to be the container of our linear back stacks.</p>
+<pre><code class="Java">@Override
+public Object instantiateItem(ViewGroup container, int position) {
+    // View Pagers doesn't like it when you remove a view from the container.
+    // We need to add an extra view so that we can add and remove views to it at will
+    ViewGroup parent = new RelativeLayout(container.getContext());
+    container.addView(parent);
+
+    //Just being lazy. If you're inflating unique view groups, you should store a unique tag
+    //in each one
+    String tag = TAG + position;
+
+    backStackManager.createLinearBackStack(tag, parent, (layoutInflater, viewGroup) -&gt; {
+        ViewGroup vg = (ViewGroup) layoutInflater.inflate(R.layout.view_group1, viewGroup, false);
+        viewGroup.addView(vg);
+        return vg;
+    });
+
+    //Remember to actually add the linear back stack to the split back stack
+    splitBackStack.add(position, tag);
+
+    return parent;
+}
+</code></pre>
+
+<p>Additionally we need to override <code>PagerAdapter#destroyItem(ViewGroup, int, Object)</code> to remove our container view group and destroy our added linear back stacks.</p>
+<pre><code class="Java">@Override
+public void destroyItem(ViewGroup container, int position, Object object) {
+    //If you remove a view you must call splitBackStack#remove(int)
+    splitBackStack.remove(position);
+
+    //Standard view pager adapter procedure
+    container.removeView((ViewGroup) object);
+}
+</code></pre>
+
+<p>Overall the class looks like this:</p>
+<pre><code class="Java">public class ViewPagerAdapter extends PagerAdapter {
+
+    public static final int NUM_PAGES = 3;
+    public static final String SPLIT_TAG = &quot;SPLIT_TAG&quot;;
+    public static final String TAG = &quot;TAG&quot;;
+
+    private BackStackManager backStackManager = BackStack.getBackStackManager();
+    private SplitBackStack splitBackStack = backStackManager.createSplitBackStack(SPLIT_TAG, 0);
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        // View Pagers doesn't like it when you remove a view from the container.
+        // We need to add an extra view so that we can add and remove views to it at will
+        ViewGroup parent = new RelativeLayout(container.getContext());
+        container.addView(parent);
+
+        //Just being lazy. If you're inflating unique view groups, you should store a unique tag
+        //in each one
+        String tag = TAG + position;
+
+        backStackManager.createLinearBackStack(tag, parent, (layoutInflater, viewGroup) -&gt; {
+            ViewGroup vg = (ViewGroup) layoutInflater.inflate(R.layout.view_group1, viewGroup, false);
+            viewGroup.addView(vg);
+            return vg;
+        });
+
+        //Remember to actually add the linear back stack to the split back stack
+        splitBackStack.add(position, tag);
+
+        return parent;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        //If you remove a view you must call splitBackStack#remove(int)
+        splitBackStack.remove(position);
+
+        //Standard view pager adapter procedure
+        container.removeView((ViewGroup) object);
+    }
+
+    @Override
+    public int getCount() {
+        return NUM_PAGES;
+    }
+
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == object;
+    }
+}
+</code></pre>
+
+<p>We also need to make the split back stack aware of page changes. This way it knows which linear back stack should receive the go back calls.</p>
+<pre><code class="Java">viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        ((SplitBackStack) BackStack.getStack(SPLIT_TAG)).changePosition(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+});
+</code></pre>
+
+<p>Your split back stack should now work properly with the view pager. Under this configuration, each page will have it's own independent back stack.</p>
+<h4 id="bottom-bar">Bottom bar</h4>
+<p>Split back stacks also works with bottom bars. The developer is responsible for adding all the view groups needed and making an independent linear back stack for each tab. They are also responsible for switching view groups and alerting the split back stack when the user presses a new tab.</p>
+<p>Let's make a bottom bar with 3 tabs. Config the bottom bar as normal using a menu xml file. For this demo we're going to keep all three tabs visible and we're going to use <code>ViewGroup#bringChildToFront(View)</code> to switch which child is shown.</p>
+<pre><code class="Java">BackStack.install(this);
+backStackManager = BackStack.getBackStackManager();
+splitBackStack = backStackManager.createSplitBackStack(SPLIT_TAG, 0);
+
+root = findViewById(R.id.root);
+bottomBar = findViewById(R.id.bottom_bar);
+
+backStackManager.createLinearBackStack(ViewGroup1.TAG, root, (layoutInflater, container)-&gt;{
+   ViewGroup1 viewGroup = new ViewGroup1(layoutInflater.getContext());
+   container.addView(viewGroup);
+   return viewGroup;
+});
+splitBackStack.add(0, ViewGroup1.TAG);
+
+backStackManager.createLinearBackStack(ViewGroup2.TAG, root, (layoutInflater, container) -&gt; {
+    ViewGroup2 viewGroup = new ViewGroup2(layoutInflater.getContext());
+    container.addView(viewGroup);
+    return viewGroup;
+});
+splitBackStack.add(1, ViewGroup2.TAG);
+
+backStackManager.createLinearBackStack(ViewGroup3.TAG, root, (layoutInflater, container) -&gt; {
+    ViewGroup3 viewGroup = new ViewGroup3(layoutInflater.getContext());
+    container.addView(viewGroup);
+    return viewGroup;
+});
+splitBackStack.add(2, ViewGroup3.TAG);
+
+root.bringChildToFront(((LinearBackStack) backStackManager.getStack(ViewGroup1.TAG)).getCurrentView());
+</code></pre>
+
+<p>Next we're going to add a on tab change listener to the bottom bar. This will alert the split back stack which position the bar is currently at. In this method, we're also going to bring the selected view to the front so that it's shown.</p>
+<pre><code class="Java">bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        //Couldn't find a way of getting the position. Had to do this instead
+        int position = 0;
+        switch (item.getItemId()){
+            case R.id.first:position = 0; break;
+            case R.id.second: position = 1; break;
+            case R.id.third: position = 2; break;
+        }
+
+        root.bringChildToFront(((LinearBackStack)BackStack.getStack(splitBackStack.getTAG(position)))
+                .getCurrentView());
+        splitBackStack.changePosition(position);
+
+        return true;
+    }
+});
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>var base_url = '..';</script>
+        <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
+        <script src="../js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
