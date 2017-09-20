@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.rievo.android.library.BackStack;
-import com.rievo.android.library.LinearBackStack;
-import com.rievo.android.library.ViewCreator;
+import com.rievo.library.BackStack;
+import com.rievo.library.LinearBackStack;
+import com.rievo.library.ViewCreator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

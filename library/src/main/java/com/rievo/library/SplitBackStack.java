@@ -1,11 +1,6 @@
-package com.rievo.android.library;
+package com.rievo.library;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Stack;
-import java.util.Timer;
-
-import timber.log.Timber;
 
 /**
  * Created by kevin on 2017-09-15.

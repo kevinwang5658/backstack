@@ -7,9 +7,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.RelativeLayout;
 
-import com.rievo.android.library.BackStack;
-import com.rievo.android.library.BackStackManager;
-import com.rievo.android.library.SplitBackStack;
+import com.rievo.library.BackStack;
+import com.rievo.library.BackStackManager;
+import com.rievo.library.SplitBackStack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

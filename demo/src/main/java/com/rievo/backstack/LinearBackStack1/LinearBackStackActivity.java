@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.rievo.android.library.BackStack;
-import com.rievo.android.library.BackStackManager;
+import com.rievo.library.BackStack;
+import com.rievo.library.BackStackManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

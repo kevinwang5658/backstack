@@ -6,8 +6,8 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.rievo.android.library.BackStack;
-import com.rievo.android.library.LinearBackStack;
+import com.rievo.library.BackStack;
+import com.rievo.library.LinearBackStack;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

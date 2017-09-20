@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.rievo.backstack.LinearBackStack1.LinearBackStackActivity;
 import com.rievo.backstack.RealisticDemo.RealisticDemoActivity;
-import com.rievo.android.library.BackStackManager;
+import com.rievo.library.BackStackManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

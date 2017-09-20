@@ -1,4 +1,4 @@
-package com.rievo.android.library;
+package com.rievo.library;
 
 /**
  * Created by kwang on 2017-09-14.

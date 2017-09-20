@@ -1,4 +1,4 @@
-package com.rievo.android.library;
+package com.rievo.library;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,8 +9,8 @@ import java.util.Stack;
 
 import timber.log.Timber;
 
-import static com.rievo.android.library.Helper.disable;
-import static com.rievo.android.library.Helper.enable;
+import static com.rievo.library.Helper.disable;
+import static com.rievo.library.Helper.enable;
 
 /**
  * Created by kwang on 2017-09-14.

@@ -3,6 +3,9 @@ package com.rievo.android.library;
 import android.app.Activity;
 import android.widget.RelativeLayout;
 
+import com.rievo.library.BackStackManager;
+import com.rievo.library.LinearBackStack;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +14,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 /**

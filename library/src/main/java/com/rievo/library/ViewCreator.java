@@ -1,4 +1,4 @@
-package com.rievo.android.library;
+package com.rievo.library;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
