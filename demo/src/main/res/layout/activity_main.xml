@@ -6,9 +6,20 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:id="@+id/root">
+    <TextView
+        android:id="@+id/main_intro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:layout_margin="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/main_intro"
+        android:layout_alignParentTop="true" />
     <ListView
         android:id="@+id/main_activity_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:entries="@array/activity_main_entries"/>
+        android:entries="@array/activity_main_entries"
+        android:layout_below="@id/main_intro"/>
 </RelativeLayout>

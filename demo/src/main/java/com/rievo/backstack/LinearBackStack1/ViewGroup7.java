@@ -1,4 +1,4 @@
-package com.rievo.android.backstack.LinearBackStack1;
+package com.rievo.backstack.LinearBackStack1;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,8 +7,7 @@ import android.rievo.com.backstack.R;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
-import com.rievo.android.backstack.MainActivity;
-import com.rievo.android.library.LinearBackStack;
+import com.rievo.backstack.MainActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.rievo.android.backstack.LinearBackStack1.ViewGroup7 xmlns:android="http://schemas.android.com/apk/res/android"
+<com.rievo.backstack.LinearBackStack1.ViewGroup7 xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -21,4 +21,4 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 
-</com.rievo.android.backstack.LinearBackStack1.ViewGroup7>
+</com.rievo.backstack.LinearBackStack1.ViewGroup7>

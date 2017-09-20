@@ -1,4 +1,4 @@
-package com.rievo.android.backstack.RealisticDemo;
+package com.rievo.backstack.RealisticDemo;
 
 import android.content.Context;
 import android.util.AttributeSet;

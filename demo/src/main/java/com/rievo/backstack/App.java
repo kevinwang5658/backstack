@@ -1,4 +1,4 @@
-package com.rievo.android.backstack;
+package com.rievo.backstack;
 
 import android.app.Application;
 import android.rievo.com.backstack.BuildConfig;

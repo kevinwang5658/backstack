@@ -1,4 +1,4 @@
-package com.rievo.android.backstack.LinearBackStack1;
+package com.rievo.backstack.LinearBackStack1;
 
 import android.content.Context;
 import android.rievo.com.backstack.R;
@@ -12,7 +12,6 @@ import com.rievo.android.library.LinearBackStack;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 /**
  * Created by kevin on 2017-09-16.

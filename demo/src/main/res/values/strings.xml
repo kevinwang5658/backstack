@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">BackStack</string>
+    <string name="main_intro">Back stack a lightweight back navigation library for view group based navigation</string>
     <string-array name="activity_main_entries">
         <item>Feature Walk Through</item>
-        <item>View Pager</item>
+        <item>Bottom bar</item>
     </string-array>
     <string name="lbs_vg1_text">
         Press the button below to go to a new screen

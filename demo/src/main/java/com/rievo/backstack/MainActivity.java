@@ -1,4 +1,4 @@
-package com.rievo.android.backstack;
+package com.rievo.backstack;
 
 import android.content.Intent;
 import android.rievo.com.backstack.R;
@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.rievo.android.backstack.LinearBackStack1.LinearBackStackActivity;
-import com.rievo.android.backstack.RealisticDemo.RealisticDemoActivity;
+import com.rievo.backstack.LinearBackStack1.LinearBackStackActivity;
+import com.rievo.backstack.RealisticDemo.RealisticDemoActivity;
 import com.rievo.android.library.BackStackManager;
 
 import butterknife.BindView;

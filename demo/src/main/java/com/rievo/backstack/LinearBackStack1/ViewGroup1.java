@@ -1,18 +1,14 @@
-package com.rievo.android.backstack.LinearBackStack1;
+package com.rievo.backstack.LinearBackStack1;
 
 import android.content.Context;
 import android.rievo.com.backstack.R;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.rievo.android.library.BackStack;
 import com.rievo.android.library.LinearBackStack;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 

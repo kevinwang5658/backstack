@@ -1,4 +1,4 @@
-package com.rievo.android.backstack.LinearBackStack1;
+package com.rievo.backstack.LinearBackStack1;
 
 import android.content.Context;
 import android.rievo.com.backstack.R;
@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.rievo.android.library.BackStack;
-import com.rievo.android.library.Emitter;
 import com.rievo.android.library.LinearBackStack;
 
 import butterknife.ButterKnife;
