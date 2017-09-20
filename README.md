@@ -21,7 +21,7 @@ allprojects {
 build.gradle (Module)
 ~~~Gradle
 dependencies {
-    compile 'com.github.kevinwang5658:backstack:v2.2'
+    compile 'com.github.kevinwang5658:backstack:v2.3'
 }
 ~~~
 
