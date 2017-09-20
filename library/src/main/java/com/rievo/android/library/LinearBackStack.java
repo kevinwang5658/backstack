@@ -311,6 +311,14 @@ public class LinearBackStack implements BStack{
         s.allowDuplicates = allowDuplicates;
     }
 
+    /**
+     * Returns the view at the top of the stack
+     * @return view group
+     */
+    public ViewGroup getCurrentView(){
+        return currentView;
+    }
+
     //Holds view information for all retained views
     static class RetainHolder {
         ViewGroup container;
