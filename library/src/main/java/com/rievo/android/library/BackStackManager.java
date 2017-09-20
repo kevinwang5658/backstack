@@ -52,7 +52,7 @@ public class BackStackManager {
         LinearBackStack linearBackStack = new LinearBackStack(state, container, activity);
         backStackMap.put(TAG, linearBackStack);
         linearBackStack.init();
-        setRootBackStackTAG(TAG);
+        setDefaultRootBackStack(TAG);
 
         return linearBackStack;
     }
@@ -65,7 +65,7 @@ public class BackStackManager {
         }
         SplitBackStack splitBackStack = new SplitBackStack(state);
         backStackMap.put(TAG, splitBackStack);
-        setRootBackStackTAG(TAG);
+        setDefaultRootBackStack(TAG);
 
         return splitBackStack;
     }
@@ -102,7 +102,7 @@ public class BackStackManager {
             linearBackStack.initWithoutFirst(currentView);
         }
         backStackMap.put(TAG, linearBackStack);
-        setRootBackStackTAG(TAG);
+        setDefaultRootBackStack(TAG);
 
         return linearBackStack;
     }
@@ -124,7 +124,7 @@ public class BackStackManager {
         return state;
     }
 
-    private void setRootBackStackTAG(String TAG){
+    private void setDefaultRootBackStack(String TAG){
         if (rootBackStackTAG.equals("")){
             rootBackStackTAG = TAG;
         }
@@ -159,9 +159,7 @@ public class BackStackManager {
      * @param TAG
      */
     public void setRootBackStack(String TAG){
-        if (rootBackStackTAG.equals("")) {
-            rootBackStackTAG = TAG;
-        }
+        rootBackStackTAG = TAG;
     }
 
     /**
