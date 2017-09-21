@@ -6,6 +6,7 @@ More information for BackStack can be [found here](https://kevinwang5658.github.
   <img alt="Get it on Google Play"
        width = "256"
        height = "128"
+       target = "_blank"
        src="https://github.com/steverichey/google-play-badge-svg/blob/master/img/en_get.svg" />
 </a>
 
