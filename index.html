@@ -116,7 +116,7 @@
 <p>BackStack is a light weight back stack library for view based navigation on Android. Using BackStack provides an easy way to switch between view groups without having to worry about back navigation. A navigation tree built by BackStack will also be persisted through rotation and activity restarts. BackStack works with linear navigation flows as well as split flows like bottom bars and view pagers.</p>
 <h2 id="philosophy">Philosophy</h2>
 <h4 id="history">History</h4>
-<p>The navigation style that BackStack uses is view group based navigation. This means that instead of using Activities and Fragments to provide different screens, a light-weight ViewGroup is used instead. Over the years, there have been many discussions on this subject. If you want to go through it, a summary of the history can be found <a href="https://academy.realm.io/posts/michael-yotive-state-of-fragments-2017/?">here</a>.</p>
+<p>The navigation style that BackStack uses is view group based navigation. This means that instead of using Activities and Fragments to provide different screens, a light-weight ViewGroup is used instead. Over the years, there have been many discussions on this subject. If you want to go through it, a summary of the history can be found <a href="https://academy.realm.io/posts/michael-yotive-state-of-fragments-2017/?">here</a>, just try to ignore the title.</p>
 <p>Google officially recommends the use of fragments. However, people in the android community, myself included, find that fragments are large bloated objects that obscures a lot it's functionality behind layers of code. There have also been problem reported weird memory leaks and problems with the asynchronous nature of fragment transactions. The consensus in the community is that people generally don't like using fragments.</p>
 <p>In 2014 square began a movement,  <a href="https://medium.com/square-corner-blog/advocating-against-android-fragments-81fd0b462c97">here</a>, to use view groups in place of fragments. They argued that view groups are light weight containers that adhere to the Android lifecycle, something that seems perfect to use as a container for a screen. View groups, however have their own limitations. Mainly that, they don't inherently come back navigation and persistence through rotations. This is where BackStack comes in.</p>
 <h4 id="backstack_1">BackStack</h4>
@@ -203,5 +203,5 @@ public void foo(){
 
 <!--
 MkDocs version : 0.16.3
-Build Date UTC : 2017-09-20 22:50:05
+Build Date UTC : 2017-09-21 03:07:02
 -->
