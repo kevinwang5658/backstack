@@ -4,8 +4,8 @@ More information for BackStack can be [found here](https://kevinwang5658.github.
 
 <a href="https://play.google.com/store/apps/details?id=com.rievo.android">
   <img alt="Get it on Google Play"
-       width = "512"
-       height = "256"
+       width = "256"
+       height = "128"
        src="https://github.com/steverichey/google-play-badge-svg/blob/master/img/ca_get.svg" />
 </a>
 
