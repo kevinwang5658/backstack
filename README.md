@@ -2,6 +2,9 @@
 
 More information for BackStack can be [found here](https://kevinwang5658.github.io/backstack/)
 
+
+BackStack is a light weight back navigation library for view groups on Android. It provides an easy and effortless way of navigating between different screens by taking care of back navigation and view persistence. BackStack is designed to be used under a view group based navigation system, a movement began by square [in 2014](https://medium.com/square-corner-blog/advocating-against-android-fragments-81fd0b462c97).
+
 <a href="https://play.google.com/store/apps/details?id=com.rievo.backstack&hl=en">
   <img alt="Get it on Google Play"
        width = "256"
@@ -9,8 +12,6 @@ More information for BackStack can be [found here](https://kevinwang5658.github.
        target = "_blank"
        src="https://github.com/steverichey/google-play-badge-svg/blob/master/img/en_get.svg" />
 </a>
-
-BackStack is a light weight back navigation library for view groups on Android. It provides an easy and effortless way of navigating between different screens by taking care of back navigation and view persistence. BackStack is designed to be used under a view group based navigation system, a movement began by square [in 2014](https://medium.com/square-corner-blog/advocating-against-android-fragments-81fd0b462c97).
 
 Using view groups come with some inherent obstacles. They don't come with back navigation and view tree persistence built in. BackStack aims to overcome these limitations of view groups and make them a viable choice for use in-place of fragments or activities. BackStack is built around the concept of a view creator, a contextless object that does what it's name says, creates views. Each view creator is associated with a particular view group. View creators don't hold state about what they create or who told them to create what. By doing this, each view group can be inflated independent of each other regardless of the order or conditions they were first created in. BackStack stores a stack of view creators in chronological order. The view creator at the top of the stack will inflate the view that is actually shown to the user. Using this stack, BackStack can return to any previous views. View creators are contextless, and therefore they can also be persisted through activity restarts without leaking.
 
