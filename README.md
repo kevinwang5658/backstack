@@ -4,7 +4,7 @@ More information for BackStack can be [found here](https://kevinwang5658.github.
 
 <a href="https://play.google.com/store/apps/details?id=com.rievo.android">
   <img alt="Get it on Google Play"
-       src="../../../images/brand/en_generic_rgb_wo_60.png" />
+       src="https://github.com/steverichey/google-play-badge-svg/blob/master/img/ca_get.svg" />
 </a>
 
 BackStack is a light weight back navigation library for view groups on Android. It provides an easy and effortless way of navigating between different screens by taking care of back navigation and view persistence. BackStack is designed to be used under a view group based navigation system, a movement began by square [in 2014](https://medium.com/square-corner-blog/advocating-against-android-fragments-81fd0b462c97).
