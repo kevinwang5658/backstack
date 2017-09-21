@@ -2,7 +2,7 @@
 
 More information for BackStack can be [found here](https://kevinwang5658.github.io/backstack/)
 
-<a href="https://play.google.com/store/apps/details?id=com.rievo.android">
+<a href="https://play.google.com/store/apps/details?id=com.rievo.backstack&hl=en">
   <img alt="Get it on Google Play"
        width = "256"
        height = "128"
