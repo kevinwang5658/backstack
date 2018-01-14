@@ -43,6 +43,7 @@ public class ViewGroup3 extends RelativeLayout {
         ButterKnife.bind(this);
 
         button.setText("Pass " + randomNum + " to the next view");
+
     }
 
     @OnClick(R.id.lbs_vg3_next_screen) public void onClick(){

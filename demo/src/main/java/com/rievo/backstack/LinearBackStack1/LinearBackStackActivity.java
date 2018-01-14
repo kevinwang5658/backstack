@@ -12,6 +12,7 @@ import com.rievo.library.BackStackManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by kevin on 2017-09-16.
@@ -48,5 +49,25 @@ public class LinearBackStackActivity extends AppCompatActivity {
         if (!backStackManager.goBack()) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Timber.d("onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        Timber.d("onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Timber.d("onDestroy");
     }
 }

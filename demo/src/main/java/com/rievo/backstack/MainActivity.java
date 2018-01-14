@@ -13,6 +13,7 @@ import com.rievo.library.BackStackManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
