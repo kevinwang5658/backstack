@@ -31,6 +31,7 @@ public class BackStackManager {
         this.activity = activity;
 
         Timber.d("New BackStackManager");
+
     }
 
     void onDestroy(){

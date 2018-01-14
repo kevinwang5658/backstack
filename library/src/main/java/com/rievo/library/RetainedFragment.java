@@ -5,6 +5,8 @@ import android.app.Application;
 import android.app.Fragment;
 import android.os.Bundle;
 
+import timber.log.Timber;
+
 /**
  * Created by kwang on 2017-09-13.
  */
@@ -53,8 +55,10 @@ public class RetainedFragment extends Fragment implements Application.ActivityLi
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Timber.d("fragment destroyed");
+
         this.activity = null;
-        BackStack.getSelf().onDestroy();
+        BackStack.onDestroy();
         backStackManager.onDestroy();
     }
 
@@ -69,12 +73,10 @@ public class RetainedFragment extends Fragment implements Application.ActivityLi
 
     @Override
     public void onActivityStarted(Activity activity) {
-        setActivity(activity);
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        setActivity(activity);
     }
 
     @Override
@@ -84,18 +86,18 @@ public class RetainedFragment extends Fragment implements Application.ActivityLi
 
     @Override
     public void onActivityStopped(Activity activity) {
-        setActivity(activity);
     }
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
-        setActivity(activity);
     }
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        this.activity = null;
-        BackStack.getSelf().onDestroy();
-        backStackManager.onDestroy();
+        if (activity == this.activity) {
+            this.activity = null;
+            BackStack.onDestroy();
+            backStackManager.onDestroy();
+        }
     }
 }

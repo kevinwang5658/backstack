@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
 
+import timber.log.Timber;
+
 /**
  * Created by kwang on 2017-09-13.
  */
@@ -15,17 +17,16 @@ import android.os.Bundle;
  */
 public class BackStack {
 
-    //**********************
-    // Static Methods
-    //**********************
-
-    private static BackStack backStack;
+    //This is okay because we set this to null when the activity is destroyed.
+    private static RetainedFragment retainedFragment;
 
     /**
      * Installs BackStack into your app. This must be called in {@link Activity#onCreate(Bundle)}
      * @param activity
      */
     public static void install(Activity activity){
+        Timber.d("install backstack");
+
         //Standard retained fragment code. This creates a new fragment if the fragment couldn't be found
         FragmentManager fm = activity.getFragmentManager();
         RetainedFragment fragment = (RetainedFragment) fm.findFragmentByTag(RetainedFragment.TAG);
@@ -39,17 +40,20 @@ public class BackStack {
             fragment.set(activity, new BackStackManager(activity));
         }
 
-        backStack = new BackStack(fragment.getBackStackManager(
-        ));
-    }
-
-
-    static BackStack getSelf(){
-        return backStack;
+        retainedFragment = fragment;
     }
 
     public static BStack getStack(String TAG){
-        return backStack.backStackManager.getStack(TAG);
+        return retainedFragment.getBackStackManager().getStack(TAG);
+    }
+
+    public static LinearBackStack getLinearStack(String TAG){
+        BStack bStack = retainedFragment.getBackStackManager().getStack(TAG);
+        if (bStack instanceof LinearBackStack) {
+            return (LinearBackStack) bStack;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -57,21 +61,11 @@ public class BackStack {
      * @return the back stack manager
      */
     public static BackStackManager getBackStackManager(){
-        return backStack.backStackManager;
+        return retainedFragment.getBackStackManager();
     }
 
-    //*********************************
-    // Instance Methods
-    //*********************************
-
-    private BackStackManager backStackManager;
-
-    private BackStack(BackStackManager backStackManager){
-        this.backStackManager = backStackManager;
-    }
-
-    void onDestroy(){
-        backStackManager = null;
+    public static void onDestroy(){
+        retainedFragment = null;
     }
 
 }

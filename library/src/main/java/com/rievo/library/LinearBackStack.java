@@ -42,7 +42,6 @@ public class LinearBackStack implements BStack{
     private HashMap<Integer, RetainHolder> retainMap = new HashMap<>();
     private ViewGroup currentView;
     private State s;
-    private Activity activity;
     private LayoutInflater layoutInflater;
 
     //**********************************************************************************************
@@ -52,7 +51,6 @@ public class LinearBackStack implements BStack{
     LinearBackStack(State state, ViewGroup container, Activity activity){
         this.container = container;
         this.s = state;
-        this.activity = activity;
         this.layoutInflater = activity.getLayoutInflater();
     }
 
