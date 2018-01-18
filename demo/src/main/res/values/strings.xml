@@ -18,7 +18,7 @@
     <string name="lbs_vg3_text">
         Saw how it flew in? Press back to see the remove animation.
         \n\n
-        Next up is state. New view groups can have state passed in through their constructor.
+        Next up is node. New view groups can have node passed in through their constructor.
         For the demo, we\'re going to pass in a random number to the next view group. The passed in
         value is persisted through rotations.
     </string>

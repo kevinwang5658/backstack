@@ -4,15 +4,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.rievo.backstack.LinearBackStack1.LinearBackStackActivity;
 import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
 import com.rievo.library.BackStackManager;
-import com.rievo.library.SplitBackStack;
+import com.rievo.library.BottomNavBackStack;
+import com.rievo.library.LinearBackStack;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by kevin on 2017-09-16.
@@ -26,7 +32,7 @@ public class RealisticDemoActivity extends AppCompatActivity {
     @BindView(R.id.bottom_navigation) BottomNavigationView bottom_navigation;
 
     BackStackManager backStackManager;
-    SplitBackStack splitBackStack;
+    BottomNavBackStack bottomNavBackStack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,7 +43,27 @@ public class RealisticDemoActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        splitBackStack = backStackManager.createSplitBackStack(TAG, 0);
+        ArrayList<LinearBackStack> linearBackStacks = new ArrayList<>();
+        linearBackStacks.add(backStackManager.create(LinearBackStackActivity.TAG, root, (layoutInflater, container) -> {
+            //Be very careful here. The view creator has to return the view that is created not the parent container.
+            //LayoutInflator.inflate() will return the container if attachToRoot is true
+            ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup1, container, false);
+            return viewGroup;
+        }));
+        linearBackStacks.add(backStackManager.create(LinearBackStackActivity.TAG + " a", root, (layoutInflater, container) ->
+                new ViewGroup1(layoutInflater.getContext())
+        ));
+
+        linearBackStacks.add(backStackManager.create(LinearBackStackActivity.TAG + " 1", root, (layoutInflater, container) ->
+                new ViewGroup2(layoutInflater.getContext())
+        ));
+
+        BottomNavBackStack bottomNavBackStack = BackStack.getBackStackManager()
+                .createBottomNavStack(TAG, 0)
+                .attachBottomBar(bottom_navigation, linearBackStacks);
+        BackStack.getBackStackManager().setDefaultRootBackStack(TAG);
+
+        Timber.d(R.id.item_1 + "");
 
 
     }

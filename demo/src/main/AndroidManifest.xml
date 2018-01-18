@@ -17,7 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.rievo.backstack.LinearBackStack1.LinearBackStackActivity"/>
+        <activity android:name="com.rievo.backstack.LinearBackStack1.LinearBackStackActivity"
+            android:launchMode="singleTask"/>
         <activity android:name="com.rievo.backstack.RealisticDemo.RealisticDemoActivity"/>
     </application>
 

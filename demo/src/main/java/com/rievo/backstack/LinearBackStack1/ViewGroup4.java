@@ -9,11 +9,13 @@ import android.widget.TextView;
 import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
 import com.rievo.library.LinearBackStack;
+import com.rievo.library.Node;
 import com.rievo.library.ViewCreator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 /**
  * Created by kevin on 2017-09-16.
@@ -32,28 +34,30 @@ public class ViewGroup4 extends RelativeLayout {
         this.num = num;
 
         LayoutInflater.from(context).inflate(R.layout.lbs_viewgroup4, this, true);
+
+
+        Timber.d("hi");
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         ButterKnife.bind(this);
-        linearBackStack = (LinearBackStack) BackStack.getStack(LinearBackStackActivity.TAG);
+
+        Timber.d("onAttach");
+        linearBackStack = BackStack.getStack(LinearBackStackActivity.TAG);
         randomNumView.setText(num + "");
     }
 
     @OnClick(R.id.lbs_vg4_next_screen) public void onClick(){
-        linearBackStack.builder((layoutInflater, container) -> {
+        linearBackStack.add(Node.builder().viewCreator((layoutInflater, container) -> {
             ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup5, container, false);
-            container.addView(viewGroup);
             return viewGroup;
-        })
-                .setRetain(true)
-                .build();
+        }).shouldRetain(true).build());
     }
 
     /**
-     * State can be passed in as long as it doesn't reference the view group in any way
+     * Node can be passed in as long as it doesn't reference the view group in any way
      */
     public static class ViewGroup4Creator implements ViewCreator{
 
@@ -66,7 +70,6 @@ public class ViewGroup4 extends RelativeLayout {
         @Override
         public ViewGroup create(LayoutInflater layoutInflater, ViewGroup container) {
             ViewGroup4 viewGroup4 = new ViewGroup4(layoutInflater.getContext(), num);
-            container.addView(viewGroup4);
             return viewGroup4;
         }
     }

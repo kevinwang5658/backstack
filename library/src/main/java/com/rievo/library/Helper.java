@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import timber.log.BuildConfig;
 import timber.log.Timber;
 
@@ -55,5 +58,27 @@ public class Helper {
             viewGroup.removeView(view);
         }
 
+    }
+
+    /**
+     * Returns last element in a list
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> T getLast(List<T> list){
+        if (list == null || list.size() == 0){
+            return null;
+        }
+
+        return list.get(list.size() - 1);
+    }
+
+    public static <T> T pop(List<T> list){
+        if (list == null || list.size() == 0){
+            return null;
+        }
+
+        return list.remove(list.size() - 1);
     }
 }

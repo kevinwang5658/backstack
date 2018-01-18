@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 
 import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
+import com.rievo.library.BackStackManager;
 import com.rievo.library.LinearBackStack;
 
 import butterknife.ButterKnife;
@@ -18,7 +19,7 @@ import butterknife.OnClick;
 
 public class ViewGroup1 extends RelativeLayout {
 
-    LinearBackStack linearBackStack;
+    BackStackManager backStackManager;
 
     public ViewGroup1(Context context) {
         super(context);
@@ -36,16 +37,13 @@ public class ViewGroup1 extends RelativeLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         ButterKnife.bind(this);
-        linearBackStack = (LinearBackStack) BackStack.getStack(LinearBackStackActivity.TAG);
-
+        backStackManager = BackStack.getBackStackManager();
     }
 
     @OnClick(R.id.lbs_vg1_next_screen) public void onNextScreenClicked(){
         //Adding a new screen is as easy as this
-        linearBackStack.add((layoutInflater, container) -> {
-            ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup2, container ,false);
-            container.addView(viewGroup);
-            return viewGroup;
+        backStackManager.add(LinearBackStackActivity.TAG, (layoutInflater, container) -> {
+            return  (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup2, container ,false);
         });
     }
 }

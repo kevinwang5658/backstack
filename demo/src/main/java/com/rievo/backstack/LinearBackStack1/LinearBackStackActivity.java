@@ -29,16 +29,15 @@ public class LinearBackStackActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BackStack.install(this);
         setContentView(R.layout.lbs_activity);
         ButterKnife.bind(this);
-        BackStack.install(this);
 
         backStackManager = BackStack.getBackStackManager();
-        backStackManager.createLinearBackStack(TAG, root, (layoutInflater, container) -> {
+        backStackManager.create(TAG, root, (layoutInflater, container) -> {
             //Be very careful here. The view creator has to return the view that is created not the parent container.
             //LayoutInflator.inflate() will return the container if attachToRoot is true
             ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup1, container, false);
-            container.addView(viewGroup);
             return viewGroup;
         });
 

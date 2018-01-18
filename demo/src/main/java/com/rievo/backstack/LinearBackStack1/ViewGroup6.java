@@ -42,7 +42,6 @@ public class ViewGroup6 extends RelativeLayout {
     @OnClick(R.id.lbs_vg6_next_screen) public void onNextClicked(){
         linearBackStack.add((layoutInflater, container) -> {
             ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup7, container, false);
-            container.addView(viewGroup);
             return viewGroup;
         });
     }

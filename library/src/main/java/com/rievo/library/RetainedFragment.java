@@ -81,7 +81,6 @@ public class RetainedFragment extends Fragment implements Application.ActivityLi
 
     @Override
     public void onActivityPaused(Activity activity) {
-        setActivity(activity);
     }
 
     @Override

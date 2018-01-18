@@ -43,17 +43,8 @@ public class BackStack {
         retainedFragment = fragment;
     }
 
-    public static BStack getStack(String TAG){
-        return retainedFragment.getBackStackManager().getStack(TAG);
-    }
-
-    public static LinearBackStack getLinearStack(String TAG){
-        BStack bStack = retainedFragment.getBackStackManager().getStack(TAG);
-        if (bStack instanceof LinearBackStack) {
-            return (LinearBackStack) bStack;
-        } else {
-            return null;
-        }
+    public static LinearBackStack getStack(String TAG){
+        return retainedFragment.getBackStackManager().getLinearStack(TAG);
     }
 
     /**

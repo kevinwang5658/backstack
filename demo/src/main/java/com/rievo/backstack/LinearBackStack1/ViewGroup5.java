@@ -43,8 +43,7 @@ public class ViewGroup5 extends RelativeLayout{
         //Views that are parents to the default container can also be used as containers
         linearBackStack.add((layoutInflater, container) -> {
             ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup6, container, false);
-            container.addView(viewGroup);
             return viewGroup;
-        }, getRootView().findViewById(R.id.root));
+        });
     }
 }
