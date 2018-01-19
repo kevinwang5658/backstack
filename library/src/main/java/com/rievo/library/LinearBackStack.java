@@ -20,12 +20,13 @@ import timber.log.Timber;
  * A linear backstack flow
  */
 public class LinearBackStack extends RelativeLayout implements BStack {
-    protected String TAG;
 
-    protected LayoutInflater layoutInflater;
-    protected LinearState s;
+    private String TAG;
 
-    protected List<Pair<Node, ViewGroup>> viewStack = new ArrayList<>();
+    private LayoutInflater layoutInflater;
+    private LinearState s;
+
+    private List<Pair<Node, ViewGroup>> viewStack = new ArrayList<>();
 
     //***************************************************
     // Lifecycle
@@ -125,14 +126,6 @@ public class LinearBackStack extends RelativeLayout implements BStack {
         return true;
     }
 
-    public boolean addAsync(Node node){
-        if (node.asyncViewCreator() == null){
-            throw new RuntimeException("AsyncViewCreator is not set");
-        }
-
-        return true;
-    }
-
     @Override
     public boolean goBack() {
         Timber.d("go back");
@@ -216,7 +209,7 @@ public class LinearBackStack extends RelativeLayout implements BStack {
 
     //**************
 
-    protected List<Listener> listenerList = new ArrayList<>();
+    private List<Listener> listenerList = new ArrayList<>();
 
     public void addListener(Listener listener){
         listenerList.add(listener);

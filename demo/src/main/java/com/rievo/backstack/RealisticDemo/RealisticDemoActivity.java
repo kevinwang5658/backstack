@@ -38,6 +38,10 @@ public class RealisticDemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rd_activity);
+
+        Timber.d("hi");
+
+
         BackStack.install(this);
         backStackManager = BackStack.getBackStackManager();
 

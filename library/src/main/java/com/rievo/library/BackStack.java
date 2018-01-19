@@ -1,8 +1,12 @@
 package com.rievo.library;
 
 import android.app.Activity;
-import android.app.FragmentManager;
+import android.arch.lifecycle.GenericLifecycleObserver;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import timber.log.Timber;
 
@@ -18,33 +22,38 @@ import timber.log.Timber;
 public class BackStack {
 
     //This is okay because we set this to null when the activity is destroyed.
-    private static RetainedFragment retainedFragment;
+    private static AppCompatActivity activity;
 
     /**
      * Installs BackStack into your app. This must be called in {@link Activity#onCreate(Bundle)}
      * @param activity
      */
-    public static void install(Activity activity){
+    public static void install(final AppCompatActivity activity){
         Timber.d("install backstack");
 
-        //Standard retained fragment code. This creates a new fragment if the fragment couldn't be found
-        FragmentManager fm = activity.getFragmentManager();
-        RetainedFragment fragment = (RetainedFragment) fm.findFragmentByTag(RetainedFragment.TAG);
+        final RetainedViewModel model = ViewModelProviders.of(activity).get(RetainedViewModel.class);
+        activity.getLifecycle().addObserver(new GenericLifecycleObserver() {
+            @Override
+            public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
+                if (event == Lifecycle.Event.ON_DESTROY){
+                    model.getBackStackManager().onDestroy();
+                    BackStack.activity = null;
+                }
+            }
+        });
 
-        if (fragment == null){
-            fragment = new RetainedFragment();
-            fm.beginTransaction()
-                    .add(fragment, RetainedFragment.TAG)
-                    .commit();
-            activity.getApplication().registerActivityLifecycleCallbacks(fragment);
-            fragment.set(activity, new BackStackManager(activity));
+        if (model.getBackStackManager() == null){
+            Timber.d("backstack is null");
+            model.setBackStackManager(new BackStackManager());
         }
 
-        retainedFragment = fragment;
+        BackStack.activity = activity;
     }
 
     public static LinearBackStack getStack(String TAG){
-        return retainedFragment.getBackStackManager().getLinearStack(TAG);
+        return ViewModelProviders.of(activity).get(RetainedViewModel.class)
+                .getBackStackManager()
+                .getLinearStack(TAG);
     }
 
     /**
@@ -52,11 +61,12 @@ public class BackStack {
      * @return the back stack manager
      */
     public static BackStackManager getBackStackManager(){
-        return retainedFragment.getBackStackManager();
+        return ViewModelProviders.of(activity).get(RetainedViewModel.class)
+                .getBackStackManager();
     }
 
     public static void onDestroy(){
-        retainedFragment = null;
+        Timber.d("hihi");
     }
 
 }

@@ -20,7 +20,6 @@ import timber.log.Timber;
  */
 public class BackStackManager {
 
-    private Activity activity;
     private HashMap<String, SplitState> splitStateMap = new HashMap<>();
     private HashMap<String, LinearState> linearStateMap = new HashMap<>();
     private HashMap<String, BStack> backStackMap = new HashMap<>();
@@ -30,14 +29,11 @@ public class BackStackManager {
     // Life Cycle
     //******************
 
-    BackStackManager(Activity activity) {
-        this.activity = activity;
-
+    BackStackManager() {
         Timber.d("New BackStackManager");
     }
 
     void onDestroy(){
-        activity = null;
         backStackMap.clear();
     }
 
@@ -99,11 +95,6 @@ public class BackStackManager {
      */
     void addStack(String TAG, BStack bStack){
         backStackMap.put(TAG, bStack);
-    }
-
-    //Sets the activity
-    void setActivity(Activity activity){
-        this.activity = activity;
     }
 
     /**
