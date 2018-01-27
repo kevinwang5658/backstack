@@ -1,12 +1,12 @@
-package com.rievo.backstack.LinearBackStack1;
+package com.rievo.backstack.Async;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.rievo.backstack.Async.AsyncBackStackActivity;
 import com.rievo.backstack.R;
+import com.rievo.library.AsyncBackStack;
 import com.rievo.library.BackStack;
 import com.rievo.library.LinearBackStack;
 
@@ -19,7 +19,7 @@ import butterknife.OnClick;
 
 public class ViewGroup5 extends RelativeLayout{
 
-    LinearBackStack linearBackStack;
+    AsyncBackStack linearBackStack;
 
     public ViewGroup5(Context context) {
         super(context);
@@ -37,14 +37,16 @@ public class ViewGroup5 extends RelativeLayout{
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         ButterKnife.bind(this);
-        linearBackStack = (LinearBackStack) BackStack.getStack(AsyncBackStackActivity.TAG);
+        linearBackStack = (AsyncBackStack) BackStack.getStack(AsyncBackStackActivity.TAG);
     }
 
     @OnClick(R.id.lbs_vg5_next_screen) public void onClick(){
         //Views that are parents to the default container can also be used as containers
-        linearBackStack.add((layoutInflater, container) -> {
-            ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup6, container, false);
-            return viewGroup;
+        linearBackStack.add((layoutInflater, container, emitter) -> {
+           layoutInflater.inflate(R.layout.a_viewgroup6, container, (v, i, p)->{
+               emitter.done((ViewGroup) v);
+           });
         });
+
     }
 }

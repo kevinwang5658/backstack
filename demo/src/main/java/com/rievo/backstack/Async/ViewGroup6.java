@@ -1,11 +1,10 @@
-package com.rievo.backstack.LinearBackStack1;
+package com.rievo.backstack.Async;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.rievo.backstack.Async.AsyncBackStackActivity;
 import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
 import com.rievo.library.LinearBackStack;
@@ -17,19 +16,19 @@ import butterknife.OnClick;
  * Created by kevin on 2017-09-16.
  */
 
-public class ViewGroup5 extends RelativeLayout{
+public class ViewGroup6 extends RelativeLayout {
 
     LinearBackStack linearBackStack;
 
-    public ViewGroup5(Context context) {
+    public ViewGroup6(Context context) {
         super(context);
     }
 
-    public ViewGroup5(Context context, AttributeSet attrs) {
+    public ViewGroup6(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ViewGroup5(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ViewGroup6(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -40,10 +39,9 @@ public class ViewGroup5 extends RelativeLayout{
         linearBackStack = (LinearBackStack) BackStack.getStack(AsyncBackStackActivity.TAG);
     }
 
-    @OnClick(R.id.lbs_vg5_next_screen) public void onClick(){
-        //Views that are parents to the default container can also be used as containers
+    @OnClick(R.id.lbs_vg6_next_screen) public void onNextClicked(){
         linearBackStack.add((layoutInflater, container) -> {
-            ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup6, container, false);
+            ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.a_viewgroup7, container, false);
             return viewGroup;
         });
     }

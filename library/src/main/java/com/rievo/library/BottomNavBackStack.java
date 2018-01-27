@@ -81,8 +81,18 @@ public class BottomNavBackStack implements BStack {
             }
         });
 
+        bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+            @Override
+            public void onNavigationItemReselected(@NonNull MenuItem item) {
+                int index = bottomNavigationMap.get(item.getItemId());
+
+                BackStack.getStack(linearBackStackMap.get(index)).goToHome();
+            }
+        });
+
         for (int counter = 0; counter < size; counter++){
             final int index = counter;
+            Timber.d(linearBackStackMap.get(counter) + "");
             BackStack.getStack(linearBackStackMap.get(counter)).addListener(new LinearBackStack.Listener() {
                 @Override
                 public void onAdd(String TAG) {
@@ -118,6 +128,36 @@ public class BottomNavBackStack implements BStack {
         }
 
         return false;
+    }
+
+    public boolean goUp(){
+        return goUp(linearBackStackMap.get(s.index));
+    }
+
+    public boolean goUp(String TAG){
+        int index = -1;
+        for (Map.Entry<Integer, String> entry: linearBackStackMap.entrySet()){
+            if (entry.getValue().equals(TAG)){
+                index = entry.getKey();
+                break;
+            }
+        }
+
+        if (index == -1){
+            throw new RuntimeException("Backstack is not part of bottomNavBackStack");
+        }
+
+        for (int counter = s.list.size() - 1; counter >= 0; counter--){
+            Pair<Integer, Operation> pair = s.list.get(counter);
+            if (pair.first == index && pair.second == Operation.ADD_PAGE){
+                s.list.remove(counter);
+                break;
+            }
+        }
+
+        Timber.d(index + "");
+
+        return BackStack.getStack(linearBackStackMap.get(index)).goBack();
     }
 
     @Override

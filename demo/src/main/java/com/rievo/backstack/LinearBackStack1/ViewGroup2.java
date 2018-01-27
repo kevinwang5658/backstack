@@ -15,6 +15,8 @@ import com.rievo.library.BackStack;
 import com.rievo.library.LinearBackStack;
 import com.rievo.library.Node;
 
+import java.util.logging.Handler;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
@@ -66,6 +68,8 @@ public class ViewGroup2 extends RelativeLayout{
                     .playOn(v);
 
         }).build());
+
+        linearBackStack.goBack();
     }
 
 }

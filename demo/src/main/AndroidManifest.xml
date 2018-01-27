@@ -20,6 +20,7 @@
         <activity android:name="com.rievo.backstack.LinearBackStack1.LinearBackStackActivity"
             android:launchMode="singleTask"/>
         <activity android:name="com.rievo.backstack.RealisticDemo.RealisticDemoActivity"/>
+        <activity android:name="com.rievo.backstack.Async.AsyncBackStackActivity"/>
     </application>
 
 </manifest>

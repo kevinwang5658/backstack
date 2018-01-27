@@ -15,7 +15,9 @@ import org.jetbrains.annotations.Nullable;
  */
 @AutoValue
 public abstract class Node {
-    abstract ViewCreator viewCreator();
+    @Nullable abstract Action forward();
+    @Nullable abstract Action backward();
+    @Nullable abstract ViewCreator viewCreator();
     abstract boolean shouldRetain();
     @Nullable abstract Animator addAnimator();
     @Nullable abstract Animator removeAnimator();
@@ -33,17 +35,37 @@ public abstract class Node {
 
     public static Builder builder() {
         return new AutoValue_Node.Builder()
-                .shouldRetain(false);
+                .shouldRetain(true);
     }
 
     @AutoValue.Builder
     public abstract static class Builder {
+        public abstract Builder forward(Action forward);
+        public abstract Builder backward(Action backward);
         public abstract Builder viewCreator(ViewCreator viewCreator);
         public abstract Builder shouldRetain(boolean shouldRetain);
         public abstract Builder addAnimator(Animator addAnimator);
         public abstract Builder removeAnimator(Animator removeAnimator);
         public abstract Builder asyncViewCreator(AsyncViewCreator asyncViewCreator);
 
-        public abstract Node build();
+        abstract Action forward();
+        abstract Action backward();
+        abstract AsyncViewCreator asyncViewCreator();
+        abstract ViewCreator viewCreator();
+        abstract Node autoBuild();
+
+        public Node build(){
+            if (asyncViewCreator() == null && viewCreator() == null && forward() == null){
+                throw new RuntimeException("Both async view creator and view creator " +
+                        "and forwards and backwards are not set");
+            }
+
+            if (!((forward() == null && backward() == null)
+                    || (forward() != null && backward() != null))){
+                throw new RuntimeException("Forwards and backwards must be set together");
+            }
+
+            return autoBuild();
+        }
     }
 }

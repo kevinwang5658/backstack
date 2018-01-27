@@ -7,8 +7,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.rievo.backstack.Async.AsyncBackStackActivity;
 import com.rievo.backstack.LinearBackStack1.LinearBackStackActivity;
 import com.rievo.backstack.RealisticDemo.RealisticDemoActivity;
+import com.rievo.library.AsyncBackStack;
 import com.rievo.library.BackStackManager;
 
 import butterknife.BindView;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (i){
                     case (0):startActivity(new Intent(MainActivity.this, LinearBackStackActivity.class)); break;
                     case (1):startActivity(new Intent(MainActivity.this, RealisticDemoActivity.class)); break;
+                    case (2):startActivity(new Intent(MainActivity.this, AsyncBackStackActivity.class)); break;
                 }
             }
         });

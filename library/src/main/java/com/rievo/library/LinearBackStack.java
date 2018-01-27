@@ -1,7 +1,6 @@
 package com.rievo.library;
 
 import android.content.Context;
-import android.support.v4.view.AsyncLayoutInflater;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -66,6 +65,11 @@ public class LinearBackStack extends RelativeLayout implements BStack {
             //Readd the top view of the stack
             addView(Helper.getLast(s.nodes));
         }
+    }
+
+    LinearBackStack(Context context, String TAG){
+        super(context);
+        this.TAG = TAG;
     }
 
 
@@ -135,6 +139,11 @@ public class LinearBackStack extends RelativeLayout implements BStack {
             return false;
         }
 
+        if (Helper.getLast(viewStack).second instanceof Reversible &&
+                ((Reversible) Helper.getLast(viewStack).second).onBack()){
+            return true;
+        }
+
         //Get the previous node
         Node prev = s.nodes.get(s.nodes.size() - 2);
         ViewGroup prevView = null;
@@ -142,6 +151,8 @@ public class LinearBackStack extends RelativeLayout implements BStack {
             prevView = prev.viewCreator().create(layoutInflater, this);
             viewStack.add(viewStack.size() - 1, new Pair<>(prev, prevView));
             addView(prevView);
+        } else {
+            Helper.enable(viewStack.get(viewStack.size() - 2).second);
         }
 
         //pops view from stack
@@ -178,6 +189,8 @@ public class LinearBackStack extends RelativeLayout implements BStack {
         if (!first.shouldRetain()){
             firstView = first.viewCreator().create(layoutInflater, this);
             viewStack.add(0, new Pair<>(first, firstView));
+        } else {
+            Helper.enable(viewStack.get(0).second);
         }
 
         for (int i = viewStack.size() - 1; i > 0; i-- ){
@@ -199,7 +212,11 @@ public class LinearBackStack extends RelativeLayout implements BStack {
         return BackStack.getBackStackManager().getLinearState(TAG);
     }
 
-    public ViewGroup addView(Node node){
+    public ViewGroup getCurrentView(){
+        return viewStack.get(s.nodes.indexOf(Helper.getLastViewNode(s.nodes).second)).second;
+    }
+
+    private ViewGroup addView(Node node){
         ViewGroup vg = node.viewCreator().create(layoutInflater, this);
         viewStack.add(new Pair<>(node, vg));
         addView(vg);
@@ -209,14 +226,14 @@ public class LinearBackStack extends RelativeLayout implements BStack {
 
     //**************
 
-    private List<Listener> listenerList = new ArrayList<>();
+    private List<Listener> addListenerList = new ArrayList<>();
 
     public void addListener(Listener listener){
-        listenerList.add(listener);
+        addListenerList.add(listener);
     }
 
-    public void onAddEvent(){
-        for (Listener listener: listenerList){
+    protected void onAddEvent(){
+        for (Listener listener: addListenerList){
             listener.onAdd(TAG);
         }
     }

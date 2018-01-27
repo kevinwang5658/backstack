@@ -1,4 +1,4 @@
-package com.rievo.backstack.LinearBackStack1;
+package com.rievo.backstack.Async;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
 import com.rievo.library.BackStackManager;
-import com.rievo.library.LinearBackStack;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,8 +42,11 @@ public class ViewGroup1 extends RelativeLayout {
 
     @OnClick(R.id.lbs_vg1_next_screen) public void onNextScreenClicked(){
         //Adding a new screen is as easy as this
-        backStackManager.add(LinearBackStackActivity.TAG, (layoutInflater, container) -> {
-            return  (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup2, container ,false);
+        Timber.d("hi");
+        backStackManager.add(AsyncBackStackActivity.TAG, (layoutInflater, container, emitter) -> {
+            layoutInflater.inflate(R.layout.a_viewgroup2, container, (v, i, p)->{
+                emitter.done((ViewGroup) v);
+            });
         });
     }
 }

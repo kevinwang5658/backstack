@@ -14,10 +14,4 @@ public class RetainedViewModel extends ViewModel {
     BackStackManager getBackStackManager(){
         return backStackManager;
     }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        Timber.d("hi");
-    }
 }

@@ -47,6 +47,12 @@ public class BackStackManager {
         return linearBackStack;
     }
 
+    public AsyncBackStack createAsync(String TAG, ViewGroup root, Node node){
+        AsyncBackStack asyncBackStack = new AsyncBackStack(root.getContext(), TAG, node);
+        root.addView(asyncBackStack);
+        return asyncBackStack;
+    }
+
     public BottomNavBackStack createBottomNavStack(String TAG, int index){
         return new BottomNavBackStack(TAG, index);
     }
@@ -74,6 +80,14 @@ public class BackStackManager {
         }
 
         return getLinearStack(TAG).add(Node.builder().viewCreator(viewCreator).build());
+    }
+
+    public boolean add(String TAG, AsyncViewCreator viewCreator){
+        if (!backStackMap.containsKey(TAG) || !(backStackMap.get(TAG) instanceof AsyncBackStack)){
+            throw new RuntimeException("TAG does not exist in backstack");
+        }
+
+        return getLinearStack(TAG).add(Node.builder().asyncViewCreator(viewCreator).build());
     }
 
     //****************
@@ -115,7 +129,8 @@ public class BackStackManager {
      * @param TAG The backstack TAG or null if it doesn't exist
      */
     public LinearBackStack getLinearStack(String TAG){
-        if (backStackMap.get(TAG) instanceof LinearBackStack) {
+        Timber.d(backStackMap.get(TAG) + "");
+        if (backStackMap.get(TAG) instanceof LinearBackStack || backStackMap.get(TAG) instanceof AsyncBackStack) {
             return (LinearBackStack) backStackMap.get(TAG);
         } else {
             return null;

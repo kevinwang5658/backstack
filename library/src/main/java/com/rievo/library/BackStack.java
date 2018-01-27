@@ -51,7 +51,8 @@ public class BackStack {
     }
 
     public static LinearBackStack getStack(String TAG){
-        return ViewModelProviders.of(activity).get(RetainedViewModel.class)
+        return ViewModelProviders.of(activity)
+                .get(RetainedViewModel.class)
                 .getBackStackManager()
                 .getLinearStack(TAG);
     }
@@ -61,12 +62,8 @@ public class BackStack {
      * @return the back stack manager
      */
     public static BackStackManager getBackStackManager(){
-        return ViewModelProviders.of(activity).get(RetainedViewModel.class)
+        return ViewModelProviders.of(activity)
+                .get(RetainedViewModel.class)
                 .getBackStackManager();
     }
-
-    public static void onDestroy(){
-        Timber.d("hihi");
-    }
-
 }

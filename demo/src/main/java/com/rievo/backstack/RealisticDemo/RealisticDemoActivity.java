@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.rievo.backstack.Async.AsyncBackStackActivity;
 import com.rievo.backstack.LinearBackStack1.LinearBackStackActivity;
 import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
 import com.rievo.library.BackStackManager;
 import com.rievo.library.BottomNavBackStack;
 import com.rievo.library.LinearBackStack;
+import com.rievo.library.Node;
 
 import java.util.ArrayList;
 
@@ -54,9 +56,12 @@ public class RealisticDemoActivity extends AppCompatActivity {
             ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup1, container, false);
             return viewGroup;
         }));
-        linearBackStacks.add(backStackManager.create(LinearBackStackActivity.TAG + " a", root, (layoutInflater, container) ->
-                new ViewGroup1(layoutInflater.getContext())
-        ));
+
+        linearBackStacks.add( backStackManager.createAsync(AsyncBackStackActivity.TAG, root, Node.builder().asyncViewCreator((layoutInflater, container, emitter)->{
+            layoutInflater.inflate(R.layout.a_viewgroup1, container, (v, resid, parent)->{
+                emitter.done((ViewGroup) v);
+            });
+        }).build()));
 
         linearBackStacks.add(backStackManager.create(LinearBackStackActivity.TAG + " 1", root, (layoutInflater, container) ->
                 new ViewGroup2(layoutInflater.getContext())
