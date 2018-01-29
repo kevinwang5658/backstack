@@ -31,11 +31,14 @@ public class BackStack {
     public static void install(final AppCompatActivity activity){
         Timber.d("install backstack");
 
+        BackStack.activity = activity;
+
         final RetainedViewModel model = ViewModelProviders.of(activity).get(RetainedViewModel.class);
         activity.getLifecycle().addObserver(new GenericLifecycleObserver() {
             @Override
             public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
                 if (event == Lifecycle.Event.ON_DESTROY){
+                    Timber.d("onDestroy");
                     model.getBackStackManager().onDestroy();
                     BackStack.activity = null;
                 }
@@ -46,15 +49,13 @@ public class BackStack {
             Timber.d("backstack is null");
             model.setBackStackManager(new BackStackManager());
         }
-
-        BackStack.activity = activity;
     }
 
-    public static LinearBackStack getStack(String TAG){
+    public static LBStack getStack(String TAG){
         return ViewModelProviders.of(activity)
                 .get(RetainedViewModel.class)
                 .getBackStackManager()
-                .getLinearStack(TAG);
+                .getLBStack(TAG);
     }
 
     /**

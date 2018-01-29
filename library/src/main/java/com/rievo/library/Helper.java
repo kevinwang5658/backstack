@@ -14,6 +14,7 @@ import java.util.List;
 import timber.log.BuildConfig;
 import timber.log.Timber;
 
+import static android.view.View.GONE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
@@ -21,6 +22,20 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  */
 
 public class Helper {
+
+    public static void removeViewAnimation(ViewGroup container, ViewGroup removeView){
+        //solves weird animation glitch by delaying removal
+
+        removeView.setVisibility(GONE);
+
+        //pops view from stack and removes view from parent
+        container.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                container.removeView(removeView);
+            }
+        }, 500);
+    }
 
     public static final String DISABLE = "BACKSTACK_Disable";
 

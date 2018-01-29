@@ -28,22 +28,22 @@ public class BottomNavBackStack implements BStack {
     Map<Integer, Integer> bottomNavigationMap = new HashMap<>();
 
     private BottomNavigationView bottomNavigationView;
-    private SplitState s;
+    private BottomNavState s;
 
     BottomNavBackStack(String TAG, int defaultIndex){
         this.TAG = TAG;
         BackStack.getBackStackManager().addStack(TAG, this);
 
-        s = BackStack.getBackStackManager().getSplitState(TAG);
+        s = BackStack.getBackStackManager().getBottomNavState(TAG);
         if (s == null){
-            s = new SplitState();
+            s = new BottomNavState();
             s.index = defaultIndex;
 
             BackStack.getBackStackManager().addSplitState(TAG, s);
         }
     }
 
-    public BottomNavBackStack attachBottomBar(final BottomNavigationView bottomNavigationView, List<LinearBackStack> linearBackStacks){
+    public BottomNavBackStack attachBottomBar(final BottomNavigationView bottomNavigationView, List<LBStack> linearBackStacks){
         if (bottomNavigationView.getMenu().size() != linearBackStacks.size()){
             throw new RuntimeException("Number of backstacks doesn't match number of tabs");
         }
@@ -86,6 +86,12 @@ public class BottomNavBackStack implements BStack {
             public void onNavigationItemReselected(@NonNull MenuItem item) {
                 int index = bottomNavigationMap.get(item.getItemId());
 
+                for (int counter = s.list.size() - 1; counter >= 0; counter--){
+                    if (s.list.get(counter).first == index && s.list.get(counter).second == Operation.ADD_PAGE){
+                        s.list.remove(counter);
+                    }
+                }
+
                 BackStack.getStack(linearBackStackMap.get(index)).goToHome();
             }
         });
@@ -93,7 +99,7 @@ public class BottomNavBackStack implements BStack {
         for (int counter = 0; counter < size; counter++){
             final int index = counter;
             Timber.d(linearBackStackMap.get(counter) + "");
-            BackStack.getStack(linearBackStackMap.get(counter)).addListener(new LinearBackStack.Listener() {
+            BackStack.getStack(linearBackStackMap.get(counter)).setOnAddListener(new LinearBackStack.Listener() {
                 @Override
                 public void onAdd(String TAG) {
                     s.list.add(new Pair<>(index, Operation.ADD_PAGE));
@@ -163,5 +169,10 @@ public class BottomNavBackStack implements BStack {
     @Override
     public void destroy() {
 
+    }
+
+    @Override
+    public String getTag() {
+        return TAG;
     }
 }

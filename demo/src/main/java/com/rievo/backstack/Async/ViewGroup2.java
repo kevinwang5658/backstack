@@ -14,6 +14,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
+import com.rievo.library.LBStack;
 import com.rievo.library.LinearBackStack;
 import com.rievo.library.Node;
 import com.rievo.library.Reversible;
@@ -35,7 +36,7 @@ public class ViewGroup2 extends RelativeLayout implements Reversible{
 
     @BindView(R.id.lbs_vg2_next_screen) Button button;
 
-    LinearBackStack linearBackStack;
+    LBStack linearBackStack;
     int clickCounter = 0;
 
     public ViewGroup2(Context context) {
@@ -57,7 +58,7 @@ public class ViewGroup2 extends RelativeLayout implements Reversible{
         Timber.d("onAttach");
 
         ButterKnife.bind(this);
-        linearBackStack = (LinearBackStack) BackStack.getStack(AsyncBackStackActivity.TAG);
+        linearBackStack = BackStack.getStack(AsyncBackStackActivity.TAG);
     }
 
 

@@ -15,4 +15,5 @@ public interface BStack {
      */
     boolean goBack();
     void destroy();
+    String getTag();
 }

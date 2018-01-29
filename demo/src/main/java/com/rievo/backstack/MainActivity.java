@@ -10,12 +10,10 @@ import android.widget.ListView;
 import com.rievo.backstack.Async.AsyncBackStackActivity;
 import com.rievo.backstack.LinearBackStack1.LinearBackStackActivity;
 import com.rievo.backstack.RealisticDemo.RealisticDemoActivity;
-import com.rievo.library.AsyncBackStack;
 import com.rievo.library.BackStackManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 

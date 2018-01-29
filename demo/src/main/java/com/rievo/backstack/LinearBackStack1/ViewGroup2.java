@@ -54,7 +54,7 @@ public class ViewGroup2 extends RelativeLayout{
     @OnClick(R.id.lbs_vg2_next_screen) public void onClick(){
         linearBackStack.add(Node.builder().viewCreator((layoutInflater, container) -> {
             return (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup3, container, false);
-        }).addAnimator((v, e) -> {
+        })/*.addAnimator((v, e) -> {
             YoYo.with(Techniques.SlideInRight)
                     .duration(200)
                     .onEnd(a->e.done())
@@ -67,9 +67,7 @@ public class ViewGroup2 extends RelativeLayout{
                     .onEnd(a->e.done())
                     .playOn(v);
 
-        }).build());
-
-        linearBackStack.goBack();
+        })*/.build());
     }
 
 }

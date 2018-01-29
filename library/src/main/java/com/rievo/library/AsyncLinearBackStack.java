@@ -18,7 +18,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class AsyncBackStack extends LinearBackStack {
+public class AsyncLinearBackStack extends RelativeLayout implements LBStack, LBStackDefaults{
 
     private String TAG;
 
@@ -30,8 +30,11 @@ public class AsyncBackStack extends LinearBackStack {
 
     private SparseArray<Pair<Node, ViewGroup>> viewStack = new SparseArray<>();
 
-    public AsyncBackStack(Context context, String TAG, Node firstNode) {
-        super(context, TAG);
+    private Animator defaultAddAnimator;
+    private Animator defaultRemoveAnimator;
+
+    public AsyncLinearBackStack(Context context, String TAG, Node firstNode) {
+        super(context);
 
         this.TAG = TAG;
         sLayoutInflater = LayoutInflater.from(context);
@@ -70,8 +73,9 @@ public class AsyncBackStack extends LinearBackStack {
     public void destroy() {
     }
 
-    public boolean add(AsyncViewCreator asyncViewCreator){
-        return add(Node.builder().asyncViewCreator(asyncViewCreator).build());
+    @Override
+    public String getTag() {
+        return TAG;
     }
 
     @Override
@@ -88,6 +92,10 @@ public class AsyncBackStack extends LinearBackStack {
         return true;
     }
 
+    public boolean add(AsyncViewCreator asyncViewCreator){
+        return add(Node.builder().asyncViewCreator(asyncViewCreator).build());
+    }
+
     @Override
     public boolean add(Node node){
         if (!startUpComplete){
@@ -100,6 +108,7 @@ public class AsyncBackStack extends LinearBackStack {
             Timber.d("hi");
             s.nodes.add(node);
             node.forward().action(this);
+            onAddEvent();
             return true;
         }
 
@@ -109,7 +118,10 @@ public class AsyncBackStack extends LinearBackStack {
         addViewAsync(node, Helper.lastIndex(s.nodes), (v)->{
             if (node.addAnimator() != null) {
                 node.addAnimator().animate(v, () -> { });
+            } else if (defaultAddAnimator != null){
+                defaultAddAnimator.animate(v, () -> { });
             }
+
             return null;
         });
 
@@ -122,90 +134,37 @@ public class AsyncBackStack extends LinearBackStack {
             return false;
         }
 
-        if (s.nodes.size() <= 1){
-            Timber.d("last node");
-            return false;
-        }
-
-        //Apply backwards before checking for views
-        if (Helper.getLast(s.nodes).backward() != null){
-            Node node = Helper.pop(s.nodes);
-            Timber.d("hi");
-            node.backward().action(this);
-            return true;
-        }
-
-        Timber.d("hi");
-
-        if (Helper.getLast(viewStack).second instanceof Reversible &&
-                ((Reversible) Helper.getLast(viewStack).second).onBack()){
-            return true;
-        }
-
-        //TODO: handle better
-        if (s.nodes.size() - 1 > Helper.lastIndex(viewStack)){
-            Timber.d(Helper.lastIndex(viewStack) + " " + s.nodes.size());
-            return true;
-        }
-
-        //pops view from stack
-        final Pair<Node, ViewGroup> pair = Helper.pop(viewStack);
-        final ViewGroup currentView = pair.second;
-        final Node currentNode = Helper.pop(s.nodes);
-
-        Timber.d(pair.first.equals(currentNode) + "");
-
-        Helper.enable(Helper.getLast(viewStack).second);
-
-        //Remove the view. If the animator isn't null then use that first
-        if (currentNode.removeAnimator() != null) {
-            currentView.bringToFront();
-            currentNode.removeAnimator().animate(currentView, new Emitter() {
-                @Override
-                public void done() {
-                    Timber.d("hi");
-
-                    //pops view from stack and removes view from parent
-                    removeView(currentView);
-                }
-            });
-        } else {
-            Timber.d("remove");
-            removeView(currentView);
-        }
-
-        return true;
+        return goBackImpl(this, s, viewStack, defaultRemoveAnimator);
     }
 
     @Override
     public boolean goToHome(){
         Timber.d(s.nodes + "");
 
-        if (s.nodes.size() <= 1){
-            Timber.d("last node");
+        if (!startUpComplete){
             return false;
         }
 
-        Node first = s.nodes.get(0);
-        Helper.enable(viewStack.get(0).second);
+        return goToHomeImpl(this, s, viewStack, defaultRemoveAnimator);
+    }
 
-        for (int i = viewStack.size() - 1; i > 0; i-- ){
-            removeView(Helper.pop(viewStack).second);
-        }
+    @Override
+    public LBStack setDefaultAddAnimator(Animator animator){
+        defaultAddAnimator = animator;
+        return this;
+    }
 
-        for (int i = s.nodes.size() - 1; i > 0; i--){
-            Helper.pop(s.nodes);
-        }
-
-        return true;
+    @Override
+    public LBStack setDefaultRemoveAnimator(Animator animator){
+        defaultRemoveAnimator = animator;
+        return this;
     }
 
     //*****************************
     // Helper
     //********************
 
-    @Override
-    public LinearState getState(){
+    private LinearState getState(){
         return BackStack.getBackStackManager().getLinearState(TAG);
     }
 
@@ -224,6 +183,7 @@ public class AsyncBackStack extends LinearBackStack {
         Timber.d(position + "");
         //Defaults to sychronous add
         if (node.asyncViewCreator() != null) {
+            Timber.d("ab");
             node.asyncViewCreator().create(layoutInflater, this, (v)->{
                 addView(v);
                 viewStack.put(position, new Pair<>(node, v));
@@ -231,7 +191,11 @@ public class AsyncBackStack extends LinearBackStack {
                 onAddEvent();
             });
         } else {
-            addView(node, position);
+            Timber.d("b");
+            ViewGroup v = addView(node, position);
+            viewStack.put(position, new Pair<>(node, v));
+            listener.apply(v);
+            onAddEvent();
         }
     }
 
@@ -253,7 +217,8 @@ public class AsyncBackStack extends LinearBackStack {
                 }
             });
         } else {
-            addView(node, position);
+            ViewGroup v = addView(node, position);
+            viewStack.put(position, new Pair<>(node, v));
             if (position < nodeList.size() - 1){
                 applyForwardOperations(nodeList, position + 1);
             }
@@ -341,6 +306,21 @@ public class AsyncBackStack extends LinearBackStack {
             if (--count == 0){
                 listener.apply(null);
             }
+        }
+    }
+
+    //**************
+
+    private List<Listener> addListenerList = new ArrayList<>();
+
+    @Override
+    public void setOnAddListener(Listener listener){
+        addListenerList.add(listener);
+    }
+
+    private void onAddEvent(){
+        for (Listener listener: addListenerList){
+            listener.onAdd(TAG);
         }
     }
 }

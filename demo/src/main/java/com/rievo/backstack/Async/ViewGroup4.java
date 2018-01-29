@@ -12,6 +12,7 @@ import com.rievo.library.AsyncEmitter;
 import com.rievo.library.AsyncViewCreator;
 import com.rievo.library.BackStack;
 import com.rievo.library.Emitter;
+import com.rievo.library.LBStack;
 import com.rievo.library.LinearBackStack;
 import com.rievo.library.Node;
 import com.rievo.library.ViewCreator;
@@ -29,7 +30,7 @@ public class ViewGroup4 extends RelativeLayout {
 
     @BindView(R.id.lbs_vg4_random_num) TextView randomNumView;
 
-    LinearBackStack linearBackStack;
+    LBStack linearBackStack;
 
     int num;
 
@@ -57,7 +58,7 @@ public class ViewGroup4 extends RelativeLayout {
         linearBackStack.add(Node.builder().viewCreator((layoutInflater, container) -> {
             ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.lbs_viewgroup5, container, false);
             return viewGroup;
-        }).shouldRetain(true).build());
+        }).build());
     }
 
     /**

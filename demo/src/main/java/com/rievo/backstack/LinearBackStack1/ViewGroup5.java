@@ -37,7 +37,7 @@ public class ViewGroup5 extends RelativeLayout{
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         ButterKnife.bind(this);
-        linearBackStack = (LinearBackStack) BackStack.getStack(AsyncBackStackActivity.TAG);
+        linearBackStack = (LinearBackStack) BackStack.getStack(LinearBackStackActivity.TAG);
     }
 
     @OnClick(R.id.lbs_vg5_next_screen) public void onClick(){

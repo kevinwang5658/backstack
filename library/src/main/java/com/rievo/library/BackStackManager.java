@@ -20,7 +20,7 @@ import timber.log.Timber;
  */
 public class BackStackManager {
 
-    private HashMap<String, SplitState> splitStateMap = new HashMap<>();
+    private HashMap<String, BottomNavState> bottomNavStateMap = new HashMap<>();
     private HashMap<String, LinearState> linearStateMap = new HashMap<>();
     private HashMap<String, BStack> backStackMap = new HashMap<>();
     private String rootBackStackTAG = "";
@@ -47,10 +47,10 @@ public class BackStackManager {
         return linearBackStack;
     }
 
-    public AsyncBackStack createAsync(String TAG, ViewGroup root, Node node){
-        AsyncBackStack asyncBackStack = new AsyncBackStack(root.getContext(), TAG, node);
-        root.addView(asyncBackStack);
-        return asyncBackStack;
+    public AsyncLinearBackStack createAsync(String TAG, ViewGroup root, Node node){
+        AsyncLinearBackStack asyncLinearBackStack = new AsyncLinearBackStack(root.getContext(), TAG, node);
+        root.addView(asyncLinearBackStack);
+        return asyncLinearBackStack;
     }
 
     public BottomNavBackStack createBottomNavStack(String TAG, int index){
@@ -68,7 +68,7 @@ public class BackStackManager {
             return backStackMap.get(rootBackStackTAG).goBack();
         } else if (backStackMap.size() > 0){
             //If not let's just use the first thing in the map
-            return ((LinearBackStack) backStackMap.values().toArray()[0]).goBack();
+            return ((LBStack) backStackMap.values().toArray()[0]).goBack();
         }
 
         return false;
@@ -79,15 +79,15 @@ public class BackStackManager {
             throw new RuntimeException("TAG does not exist in backstack");
         }
 
-        return getLinearStack(TAG).add(Node.builder().viewCreator(viewCreator).build());
+        return getLBStack(TAG).add(Node.builder().viewCreator(viewCreator).build());
     }
 
     public boolean add(String TAG, AsyncViewCreator viewCreator){
-        if (!backStackMap.containsKey(TAG) || !(backStackMap.get(TAG) instanceof AsyncBackStack)){
+        if (!backStackMap.containsKey(TAG) || !(backStackMap.get(TAG) instanceof AsyncLinearBackStack)){
             throw new RuntimeException("TAG does not exist in backstack");
         }
 
-        return getLinearStack(TAG).add(Node.builder().asyncViewCreator(viewCreator).build());
+        return getLBStack(TAG).add(Node.builder().asyncViewCreator(viewCreator).build());
     }
 
     //****************
@@ -100,15 +100,6 @@ public class BackStackManager {
      */
     public void setDefaultRootBackStack(String TAG){
         rootBackStackTAG = TAG;
-    }
-
-    /**
-     * Adds a stack to the map to be retained and for easier look ups.
-     * @param TAG
-     * @param bStack
-     */
-    void addStack(String TAG, BStack bStack){
-        backStackMap.put(TAG, bStack);
     }
 
     /**
@@ -128,28 +119,41 @@ public class BackStackManager {
      * Retrieves a linear back stack using the TAG
      * @param TAG The backstack TAG or null if it doesn't exist
      */
-    public LinearBackStack getLinearStack(String TAG){
+    public LBStack getLBStack(String TAG){
         Timber.d(backStackMap.get(TAG) + "");
-        if (backStackMap.get(TAG) instanceof LinearBackStack || backStackMap.get(TAG) instanceof AsyncBackStack) {
-            return (LinearBackStack) backStackMap.get(TAG);
+        if (backStackMap.get(TAG) instanceof LBStack) {
+            return (LBStack) backStackMap.get(TAG);
         } else {
             return null;
         }
+    }
+
+    //*********************
+    //
+    //****************
+
+    /**
+     * Adds a stack to the map to be retained and for easier look ups.
+     * @param TAG
+     * @param bStack
+     */
+    void addStack(String TAG, BStack bStack){
+        backStackMap.put(TAG, bStack);
     }
 
     void addLinearState(String TAG){
         linearStateMap.put(TAG, new LinearState());
     }
 
-    public LinearState getLinearState(String TAG){
+    LinearState getLinearState(String TAG){
         return linearStateMap.get(TAG);
     }
 
-    void addSplitState(String TAG, SplitState splitState){
-        splitStateMap.put(TAG, splitState);
+    void addSplitState(String TAG, BottomNavState bottomNavState){
+        bottomNavStateMap.put(TAG, bottomNavState);
     }
 
-    public SplitState getSplitState(String TAG){
-        return splitStateMap.get(TAG);
+    BottomNavState getBottomNavState(String TAG){
+        return bottomNavStateMap.get(TAG);
     }
 }

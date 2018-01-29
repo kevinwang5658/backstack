@@ -18,7 +18,6 @@ public abstract class Node {
     @Nullable abstract Action forward();
     @Nullable abstract Action backward();
     @Nullable abstract ViewCreator viewCreator();
-    abstract boolean shouldRetain();
     @Nullable abstract Animator addAnimator();
     @Nullable abstract Animator removeAnimator();
     @Nullable abstract AsyncViewCreator asyncViewCreator();
@@ -26,7 +25,6 @@ public abstract class Node {
     public static Node create(ViewCreator viewCreator, boolean shouldRetain, Animator addAnimator, Animator removeAnimator, AsyncViewCreator asyncViewCreator) {
         return builder()
                 .viewCreator(viewCreator)
-                .shouldRetain(shouldRetain)
                 .addAnimator(addAnimator)
                 .removeAnimator(removeAnimator)
                 .asyncViewCreator(asyncViewCreator)
@@ -34,8 +32,7 @@ public abstract class Node {
     }
 
     public static Builder builder() {
-        return new AutoValue_Node.Builder()
-                .shouldRetain(true);
+        return new AutoValue_Node.Builder();
     }
 
     @AutoValue.Builder
@@ -43,7 +40,6 @@ public abstract class Node {
         public abstract Builder forward(Action forward);
         public abstract Builder backward(Action backward);
         public abstract Builder viewCreator(ViewCreator viewCreator);
-        public abstract Builder shouldRetain(boolean shouldRetain);
         public abstract Builder addAnimator(Animator addAnimator);
         public abstract Builder removeAnimator(Animator removeAnimator);
         public abstract Builder asyncViewCreator(AsyncViewCreator asyncViewCreator);

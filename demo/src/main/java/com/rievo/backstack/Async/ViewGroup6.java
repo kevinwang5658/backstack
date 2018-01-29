@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 
 import com.rievo.backstack.R;
 import com.rievo.library.BackStack;
+import com.rievo.library.LBStack;
 import com.rievo.library.LinearBackStack;
 
 import butterknife.ButterKnife;
@@ -18,7 +19,7 @@ import butterknife.OnClick;
 
 public class ViewGroup6 extends RelativeLayout {
 
-    LinearBackStack linearBackStack;
+    LBStack linearBackStack;
 
     public ViewGroup6(Context context) {
         super(context);
@@ -36,7 +37,7 @@ public class ViewGroup6 extends RelativeLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         ButterKnife.bind(this);
-        linearBackStack = (LinearBackStack) BackStack.getStack(AsyncBackStackActivity.TAG);
+        linearBackStack = BackStack.getStack(AsyncBackStackActivity.TAG);
     }
 
     @OnClick(R.id.lbs_vg6_next_screen) public void onNextClicked(){
